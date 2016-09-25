@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Steam Grunt</title>
+	<script>
+		(function () {
+			if (!process.env.HOT) {
+				const link = document.createElement('link');
+				link.rel = 'stylesheet';
+				link.href = '../dist/style.css';
+				document.write(link.outerHTML);
+			}
+		}());
+	</script>
+</head>
+<body>
+<div id="root"></div>
+<script src="http://localhost:3000/dist/vendor.js"></script>
+<script src="http://localhost:3000/dist/bundle.js"></script>
+</body>
+</html>
