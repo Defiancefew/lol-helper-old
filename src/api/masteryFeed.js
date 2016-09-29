@@ -1,9 +1,9 @@
 import { load } from 'cheerio';
 import { promisify, resolve } from 'bluebird';
 import request from 'request';
-import { flow } from 'lodash';
+import { flow, reduce, forEach } from 'lodash';
 import cfg from '../configs/mastery.json';
-import { writeFile, statSync, mkdirSync } from 'fs';
+import { writeFile } from 'fs';
 
 const pRequestGet = promisify(request.get);
 
@@ -18,20 +18,36 @@ class MasteryFeed {
    @returns {void}
    */
   init() {
-    // TODO Check img folder creation
+    forEach(this.config.masteryAll, (nameOfMasteryTree, key) =>
+      this.check(`${this.config.mainAddress}/wiki/${nameOfMasteryTree}`, key));
+  }
 
+  /*
+   Main promise chain
+   @param {String} mainMasteryName - template url for loading mastery data
+   @param {String} key - used to name mastery branch once all info is fetched
+   @returns {void}
+   */
+  check(mainMasteryPage, key) {
+    const { config, parseMasteriesUrl, loadPage, sortMasteryTree } = this;
     const parseMasteryPage = this.parseMasteryPage.bind(this);
-    const { config, parseMasteriesUrl, loadPage } = this;
 
-    this.loadPage(`${config.mainAddress}/wiki/${config.masteryAll.ferocity}`)
+    return this.loadPage(mainMasteryPage, key)
       .then($ => parseMasteriesUrl($, config.masterySelector.link))
       .map(singleMasteryUrl => ({
         page: loadPage(`${config.mainAddress}${singleMasteryUrl}`),
         url: singleMasteryUrl
       }))
       .map(({ page, url }) => page
-        .then(result => parseMasteryPage(result, url, this.config.masterySelector)))
-      // .then(array => console.log(array))
+        .then(result => parseMasteryPage(result, url, this.config.masterySelector))
+        .catch(err => console.log(err)))
+      .then(arrayOfMasteries => sortMasteryTree(arrayOfMasteries))
+      .then(masteryObject => {
+        this.masteryTree[key] = masteryObject;
+        writeFile('./masteries.json',
+          JSON.stringify(this.masteryTree),
+          err => console.log(err));
+      })
       .catch(err => console.log(err));
   }
 
@@ -63,18 +79,6 @@ class MasteryFeed {
   }
 
   /*
-   Because we can't parse mastery name right through the local
-   page we extract it right from the url
-   @param {string} string - url page
-   @returns {string}
-   */
-  // parseMasteryName(string) {
-  //   return string
-  //     .replace(this.config.regularForUrl[0], '')
-  //     .replace(this.config.regularForUrl[1], '');
-  // }
-
-  /*
    Extract description, rank and tier from the mastery page
    @param {string} name
    @param {object} $ - web page with cheerio wrapper
@@ -83,39 +87,45 @@ class MasteryFeed {
    @returns {object}
    */
   parseMasteryPage(page, url, selector) {
-    const { description, rank, tier, pointsReq, image } = selector;
+    const { image, link, ...rest } = selector;
+    const name = cfg.regularForUrl
+      .reduce((previous, current) => previous.replace(current, ''), url);
+    const singleMasteryObject = reduce(rest, (previous, current, key) =>
+        ({ ...previous, [key]: page(current).text() })
+      , { name });
 
-    const name = url
-      .replace(cfg.regularForUrl[0], '')
-      .replace(cfg.regularForUrl[1], '');
+    // this.downloadMasteryImage(name, page(`${image}`).attr('src'));
 
-    this.downloadMasteryImage(name, page(`${image}`).attr('src'));
-
-    return resolve({
-      name,
-      description: page(`${description}`).text(),
-      rank: page(`${rank}`).text(),
-      tier: page(`${tier}`).text(),
-      pointsRequired: page(`${pointsReq}`).text()
-    });
+    return resolve(singleMasteryObject);
   }
 
   /*
-   We do save image first time app initialize
+   Save image when app initialized for the first time
    @param {string} name - used for naming the saved image on the filesystem
    @param {string} url
    @returns {void}
    */
   downloadMasteryImage(name, url) {
     return pRequestGet({ url, encoding: 'binary' })
-      .then(response => {
-        writeFile(`./src/app/img/${name}.png`,
-          response.body,
-          'binary',
-          err => (err === null) ? null : console.log(err));
-      })
+      .then(({ body }) => writeFile(`./src/app/img/${name}.png`,
+        body,
+        'binary',
+        err => console.log(err)))
       .catch(err => console.log(err));
+  }
+
+  /*
+   Convert mastery array to object and normalize it, each key equals tier number
+   @param {Array} tree - mastery info
+   @returns {Object}
+   */
+  sortMasteryTree(tree) {
+    return flow(reduce, resolve)(tree, (previous, current) =>
+        (previous[current.tier])
+          ? ({ ...previous, [current.tier]: [...previous[current.tier], current] })
+          : ({ ...previous, [current.tier]: [current] })
+      , {});
   }
 }
 
-const test = new MasteryFeed(cfg).init();
+module.exports = new MasteryFeed(cfg);

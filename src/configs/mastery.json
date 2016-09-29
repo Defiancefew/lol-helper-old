@@ -9,9 +9,9 @@
     "link"        : "#mw-content-text li a:not(.image)",
     "description" : "div.pi-data-value.pi-font",
     "image"       : ".pi-item.pi-group.pi-border-color img",
-    "tier"        : "#mw-content-text > aside > section:nth-child(6) > table > tbody > tr > td:nth-child(1)",
-    "rank"        : "#mw-content-text > aside > section:nth-child(6) > table > tbody > tr > td:nth-child(2)",
-    "pointsReq"   : "#mw-content-text > aside > section:nth-child(6) > table > tbody > tr > td:nth-child(3)"
+    "tier"        : ".pi-item.pi-group.pi-border-color:nth-last-child(1) td:nth-child(1)",
+    "rank"        : ".pi-horizontal-group .pi-data-value:nth-child(2)",
+    "pointsReq"   : ".pi-horizontal-group .pi-data-value:nth-child(3)"
   },
   "regularForUrl" : [
     "_(Season_2016_Mastery)",
