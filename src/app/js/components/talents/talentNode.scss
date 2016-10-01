@@ -1,0 +1,26 @@
+.mastery_count{
+  border: 1px solid yellow;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.mastery_icon{
+  width: 64px;
+  height: 64px;
+  display: inline-block;
+  border: 1px solid black;
+
+  &:hover{
+    cursor: pointer;
+  }
+}
+
+.mastery_description{
+}
+
+.talent_branch{
+  width: 33%;
+  display: inline-block;
+}
+
