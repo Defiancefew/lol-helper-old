@@ -4,19 +4,24 @@ import * as talentActions from '../../modules/talents';
 import { map } from 'lodash';
 import CSSModules from 'react-css-modules';
 
-import testMasteries from '../../../../../masteries.json';
-
 import TalentNode from './TalentNode';
 import styles from './Talents.scss';
 
-// @connect(({ talents }) => ({ ...talents }), { ...talentActions })
+@connect(({talents}) => ({ ...talents}), { ...talentActions })
 @CSSModules(styles)
 export default class TalentPanel extends Component {
   state = {}
   static propTypes = {}
+  static defaultProps = {
+    masteries: {}
+  }
 
-  renderBranches() {
-    return map(testMasteries, (branch, branchName) => {
+  componentDidMount() {
+    this.props.loadMasteries()
+  }
+
+  renderBranches(){
+    return map(this.props.masteries, (branch, branchName) => {
       const tiers = map(branch, (tierMasteries, key) => {
         const masteries = map(tierMasteries, mastery => {
           return (<TalentNode {...mastery} key={mastery.name}/>);
@@ -37,6 +42,7 @@ export default class TalentPanel extends Component {
   }
 
   render() {
+
     return (
       <div styleName="mastery_wrapper">
         <div>
