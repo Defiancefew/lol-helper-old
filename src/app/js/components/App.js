@@ -1,8 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import DevTools from './DevTools';
 import { Link } from 'react-router';
+import CSSModules from 'react-css-modules';
+import styles from './App.scss';
 
+@CSSModules(styles)
 @connect()
 export default class App extends Component {
 
@@ -10,8 +13,8 @@ export default class App extends Component {
     return (
       <div>
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/talents">Talents</Link></li>
+          <li><Link activeClassName="nav_active" to="/">Home</Link></li>
+          <li><Link activeClassName="nav_active" to="/talents">Talents</Link></li>
         </ul>
         <div>
           {this.props.children}

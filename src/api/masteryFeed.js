@@ -116,7 +116,7 @@ class MasteryFeed {
         err => console.log(err)))
       .catch(err => console.log(err));
   }
-
+n
   /*
    Convert mastery array to object and normalize it, each key equals tier number
    @param {Array} tree - mastery info

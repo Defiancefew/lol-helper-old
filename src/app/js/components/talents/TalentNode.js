@@ -1,14 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 import CSSModules from 'react-css-modules';
-import styles from './talentNode.scss';
+import styles from './Talents.scss';
 
 
 @CSSModules(styles)
 export default class TalentNode extends Component {
 
-  state = {
-    
-  }
+  state = {}
 
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -18,16 +16,40 @@ export default class TalentNode extends Component {
     pointsReq: PropTypes.string.isRequired
   }
 
-  render(){
-    const divStyle = {
-      backgroundImage: `url(./img/${encodeURIComponent(this.props.name)}.png)`
+  onMouseEnter() {
+    this.setState({ mousemoving: true });
+  }
+
+  onMouseLeave() {
+    this.setState({ mousemoving: false });
+  }
+
+  onMouseMove(e){
+    this.setState({ mouseX : e.pageX, mouseY: e.pageY});
+  }
+
+  render() {
+    const nodeStyle = {
+      backgroundImage: `url(./img/${encodeURIComponent(this.props.name)}.png)`,
     };
 
-    return (
-      <div style={divStyle} styleName="mastery_icon">
+    const descStyle = {
+      position: 'absolute',
+      top: `${this.state.mouseY}`,
+      left: `${this.state.mouseX + 20}`
+    }
 
-        <div styleName="mastery_count"></div>
-        {/*<div styleName="mastery_description">{this.props.description}</div>*/}
+    return (
+      <div styleName="mastery_icon_wrapper">
+          <div style={nodeStyle}
+               styleName="mastery_icon"
+               onMouseLeave={::this.onMouseLeave}
+               onMouseEnter={::this.onMouseEnter}
+               onMouseMove={::this.onMouseMove}
+          >
+            <div styleName="mastery_count">0/5</div>
+          </div>
+        <div style={descStyle} styleName="mastery_description">{this.props.description}</div>
       </div>
     );
   }
