@@ -16,14 +16,17 @@
     "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
-    "babel-node": "6.5.2",
+    "autoprefixer": "6.5.0",
     "bluebird": "3.4.6",
     "cheerio": "0.22.0",
+    "immutable": "3.8.1",
+    "jimp": "0.2.27",
     "lodash": "4.16.1",
+    "normalize-scss": "5.0.3",
     "react": "15.3.2",
     "react-dom": "15.0.2",
     "react-redux": "4.4.5",
-    "react-router": "2.4.0",
+    "react-router": "2.8.1",
     "redux": "3.5.2",
     "redux-form": "5.2.3",
     "request": "2.75.0"

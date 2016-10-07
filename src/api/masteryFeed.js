@@ -1,9 +1,10 @@
 import { load } from 'cheerio';
-import { promisify, resolve } from 'bluebird';
+import { promisify, resolve, all } from 'bluebird';
 import request from 'request';
-import { flow, reduce, forEach } from 'lodash';
+import { flow, reduce, forEach, map } from 'lodash';
 import cfg from '../configs/mastery.json';
 import { writeFile } from 'fs';
+import jimp from 'jimp';
 
 const pRequestGet = promisify(request.get);
 
@@ -18,8 +19,9 @@ class MasteryFeed {
    @returns {void}
    */
   init() {
-    forEach(this.config.masteryAll, (nameOfMasteryTree, key) =>
-      this.check(`${this.config.mainAddress}/wiki/${nameOfMasteryTree}`, key));
+    return flow(map, all)(this.config.masteryAll, (nameOfMasteryTree, key) =>
+      this.check(`${this.config.mainAddress}/wiki/${nameOfMasteryTree}`, key))
+      .then(() => resolve(this.masteryTree));
   }
 
   /*
@@ -47,6 +49,7 @@ class MasteryFeed {
         writeFile('./masteries.json',
           JSON.stringify(this.masteryTree),
           err => console.log(err));
+        return this.masteryTree[key];
       })
       .catch(err => console.log(err));
   }
@@ -91,10 +94,9 @@ class MasteryFeed {
     const name = cfg.regularForUrl
       .reduce((previous, current) => previous.replace(current, ''), url);
     const singleMasteryObject = reduce(rest, (previous, current, key) =>
-        ({ ...previous, [key]: page(current).text() })
-      , { name });
+      ({ ...previous, [key]: page(current).text() }), { name });
 
-    // this.downloadMasteryImage(name, page(`${image}`).attr('src'));
+    this.downloadMasteryImage(name, page(`${image}`).attr('src'));
 
     return resolve(singleMasteryObject);
   }
@@ -107,10 +109,22 @@ class MasteryFeed {
    */
   downloadMasteryImage(name, url) {
     return pRequestGet({ url, encoding: 'binary' })
-      .then(({ body }) => writeFile(`./src/app/img/${name}.png`,
-        body,
-        'binary',
-        err => console.log(err)))
+      .then(({ body }) => {
+
+        writeFile(`./src/app/img/${name}.png`,
+          body,
+          { encoding: 'binary', flag: 'wx' },
+          err => console.log(err));
+
+        return resolve();
+      })
+      .then(() => {
+        jimp.read(`./src/app/img/${name}.png`).then(image => {
+          image.greyscale()
+            .write(`./src/app/img/${name}-bw.png`);
+        })
+          .catch(err => console.log(err));
+      })
       .catch(err => console.log(err));
   }
 

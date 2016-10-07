@@ -1,0 +1,9 @@
+@import '../../../node_modules/normalize-scss/sass/_normalize';
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body{
+  overflow: hidden;
+}
