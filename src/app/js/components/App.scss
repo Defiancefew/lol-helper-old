@@ -1,4 +1,21 @@
-.nav_active{
+:global .nav_active {
+  font-size: 24px;
   color: orange;
 }
 
+:global .nav {
+  text-decoration: none;
+  transition: 0.5s ease-in-out;
+  font-size:24px;
+  color: black;
+
+  &:hover{
+    color: blue;
+  }
+}
+
+:global .nav_list {
+  list-style-type: none;
+  display: inline-block;
+  margin-right: 20px;
+}

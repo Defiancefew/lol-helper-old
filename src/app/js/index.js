@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from './configureStore';
 import { Router, hashHistory } from 'react-router';
 import { routes } from './routes';
-import style from '../sass/global.scss';
+import globalStyles from '../sass/global.scss';
 import fonts from '../sass/fonts.scss';
 
 const store = configureStore();

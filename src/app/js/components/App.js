@@ -1,26 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import DevTools from './DevTools';
 import { Link } from 'react-router';
-import CSSModules from 'react-css-modules';
-import styles from './App.scss';
+import DevTools from './DevTools';
+import ssss from './App.scss';
 
-@CSSModules(styles)
-@connect()
-export default class App extends Component {
-
-  render() {
-    return (
+export default props => {
+  return (
+    <div>
+      <ul>
+        <li className="nav_list"><Link className="nav" activeClassName="nav_active" to="/">Home</Link></li>
+        <li className="nav_list"><Link className="nav" activeClassName="nav_active" to="/talents">Talents</Link></li>
+      </ul>
       <div>
-        <ul>
-          <li><Link activeClassName="nav_active" to="/">Home</Link></li>
-          <li><Link activeClassName="nav_active" to="/talents">Talents</Link></li>
-        </ul>
-        <div>
-          {this.props.children}
-        </div>
-        {(process.env.NODE_ENV === 'production') ? null : <DevTools />}
+        {props.children}
       </div>
-    );
-  }
+      {(process.env.NODE_ENV === 'production') ? null : <DevTools />}
+    </div>
+  );
 }
