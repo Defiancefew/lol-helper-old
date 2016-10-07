@@ -1,6 +1,6 @@
 import { remote } from 'electron';
-import { findIndex, find, reduce } from 'lodash';
-import { Map, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
+import { calculatePointsLeft, rankPointsSum } from '../helpers';
 import testMasteries from '../../../../masteries.json';
 
 const fetchMasteries = remote.require('./api/masteryFeed');
@@ -42,22 +42,12 @@ export const resetMastery = () =>
     dispatch({ type: MASTERY_RESET });
   };
 
-export const calculatePointsLeft = (branchState) => {
-  return 30 - (reduce(branchState, (prev, next) => prev + next) + 1);
-};
-
-export const rankPointsSum = (pointsReq, rank) => {
-  return parseInt(pointsReq, 10) + parseInt(rank, 10);
-};
-
 const masteryActionHelper = (state, payload, type) => {
   const { name, rank, branch, pointsReq } = payload;
   const { branchState, pointsLeft } = state.toJS();
   const foundActiveMastery = state.get('masteryState').toJS()[name];
 
   if (type === MASTERY_ADD) {
-    // const rankPointsSum = parseInt(pointsReq, 10) + parseInt(rank, 10);
-
     /*
      Block mastery adding if you don't have enough points required.B
      Block the tier if masteries spent on this tier is enough to go further.
@@ -87,7 +77,7 @@ const masteryActionHelper = (state, payload, type) => {
     return state
       .updateIn(['branchState', branch], score => score + 1)
       .setIn(['masteryState', name], fromJS({ name, activePoints: 1, branch, pointsReq }))
-      .update('pointsLeft', currentPoints => calculatePointsLeft(branchState));
+      .update('pointsLeft', () => calculatePointsLeft(branchState));
   }
 
   if (foundActiveMastery) {

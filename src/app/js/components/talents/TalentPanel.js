@@ -7,7 +7,7 @@ import CSSModules from 'react-css-modules';
 import TalentNode from './TalentNode';
 import styles from './Talents.scss';
 
-const {func, string, number} = PropTypes;
+const { func, string, number } = PropTypes;
 
 @connect(({ talents }) => ({ ...talents.toJS() }), { ...talentActions })
 @CSSModules(styles)
@@ -16,14 +16,14 @@ export default class TalentPanel extends Component {
 
   static propTypes = {
     masteries: PropTypes.object,
+    pointsLeft: PropTypes.number,
     masteryState: PropTypes.arrayOf(
       React.PropTypes.shape({
         name: string.isRequired,
         branch: string.isRequired,
         activePoints: number.isRequired
       }),
-    ),
-    pointsLeft: number.isRequired
+    )
   }
 
   static defaultProps = {
@@ -45,6 +45,8 @@ export default class TalentPanel extends Component {
             branch={branchName}
             branchState={this.props.branchState}
             {...mastery}
+            mouseX={this.state.mouseX}
+            mouseY={this.state.mouseY}
             key={mastery.name}/>);
         })
 
@@ -64,18 +66,22 @@ export default class TalentPanel extends Component {
     })
   }
 
-  onClick() {
+  onClick = () => {
     this.props.resetMastery();
+  }
+
+  onMouseMove = (e) => {
+    this.setState({ mouseX: e.pageX, mouseY: e.pageY });
   }
 
   render() {
     return (
       <div styleName="mastery_wrapper">
         <div>
-          <button styleName="mastery_return_button" onClick={::this.onClick}>Return points</button>
+          <button styleName="mastery_return_button" onClick={this.onClick}>Return points</button>
           <div styleName="mastery_points_left">Points left : {this.props.pointsLeft}</div>
         </div>
-        <div>
+        <div onMouseMove={this.onMouseMove}>
           {this.renderBranches()}
         </div>
       </div>

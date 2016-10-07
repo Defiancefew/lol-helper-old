@@ -4,6 +4,7 @@ import request from 'request';
 import { flow, reduce, forEach, map } from 'lodash';
 import cfg from '../configs/mastery.json';
 import { writeFile } from 'fs';
+import jimp from 'jimp';
 
 const pRequestGet = promisify(request.get);
 
@@ -93,8 +94,7 @@ class MasteryFeed {
     const name = cfg.regularForUrl
       .reduce((previous, current) => previous.replace(current, ''), url);
     const singleMasteryObject = reduce(rest, (previous, current, key) =>
-        ({ ...previous, [key]: page(current).text() })
-      , { name });
+      ({ ...previous, [key]: page(current).text() }), { name });
 
     this.downloadMasteryImage(name, page(`${image}`).attr('src'));
 
@@ -108,15 +108,26 @@ class MasteryFeed {
    @returns {void}
    */
   downloadMasteryImage(name, url) {
-    // TODO Add existing image check
     return pRequestGet({ url, encoding: 'binary' })
-      .then(({ body }) => writeFile(`./src/app/img/${name}.png`,
-        body,
-        'binary',
-        err => console.log(err)))
+      .then(({ body }) => {
+
+        writeFile(`./src/app/img/${name}.png`,
+          body,
+          { encoding: 'binary', flag: 'wx' },
+          err => console.log(err));
+
+        return resolve();
+      })
+      .then(() => {
+        jimp.read(`./src/app/img/${name}.png`).then(image => {
+          image.greyscale()
+            .write(`./src/app/img/${name}-bw.png`);
+        })
+          .catch(err => console.log(err));
+      })
       .catch(err => console.log(err));
   }
-n
+
   /*
    Convert mastery array to object and normalize it, each key equals tier number
    @param {Array} tree - mastery info

@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import CSSModules from 'react-css-modules';
 import styles from './Talents.scss';
 import { find } from 'lodash';
-import { rankPointsSum, calculatePointsLeft } from '../../modules/talents';
+import { rankPointsSum, calculatePointsLeft } from '../../helpers';
 
 const { string, func, number } = PropTypes;
 
@@ -22,24 +22,16 @@ export default class TalentNode extends Component {
     masteryState: PropTypes.object.isRequired
   }
 
-  onMouseEnter() {
-    this.setState({ mousemoving: true });
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps !== this.props;
   }
 
-  onMouseLeave() {
-    this.setState({ mousemoving: false });
-  }
-
-  onMouseMove(e) {
-    this.setState({ mouseX: e.pageX, mouseY: e.pageY });
-  }
-
-  onClick(e) {
+  onClick = (e) => {
     const { name, rank, tier, pointsReq, branch } = this.props;
     this.props.addMastery({ name, rank, tier, pointsReq, branch });
   }
 
-  onContextMenu() {
+  onContextMenu = () => {
     const { name, rank, tier, pointsReq, branch } = this.props;
     this.props.removeMastery({ name, rank, tier, pointsReq, branch });
   }
@@ -72,12 +64,16 @@ export default class TalentNode extends Component {
   render() {
     const computedStyles = {
       masteryIcon: {
-        backgroundImage: `url(./img/${encodeURIComponent(this.props.name)}.png)`,
-        filter: this.isMasteryAvailable() ? 'none' : 'grayscale(100%)'
+        backgroundImage: `url(./img/${encodeURIComponent(this.props.name)}${this.isMasteryAvailable() ? '' : '-bw'}.png)`,
+        border: `1px solid ${this.isMasteryAvailable() ? 'yellow' : 'gray'}`
       },
       description: {
-        top: `${this.state.mouseY}px`,
-        left: `${this.state.mouseX + 20}px`
+        top: `${this.props.mouseY}px`,
+        left: `${this.props.mouseX + 20}px`
+      },
+      masteryCount: {
+        border: `1px solid ${this.isMasteryAvailable() ? 'yellow' : 'lightgray'}`,
+        color: `${this.isMasteryAvailable() ? 'yellow' : 'lightgray'}`
       }
     }
 
@@ -85,13 +81,13 @@ export default class TalentNode extends Component {
       <div styleName="mastery_icon_wrapper">
         <div style={computedStyles.masteryIcon}
              styleName="mastery_icon"
-             onMouseLeave={::this.onMouseLeave}
-             onMouseEnter={::this.onMouseEnter}
-             onMouseMove={::this.onMouseMove}
-             onClick={::this.onClick}
-             onContextMenu={::this.onContextMenu}
+             onClick={this.onClick}
+             onContextMenu={this.onContextMenu}
         >
-          <div styleName="mastery_count">{this.getCurrentMasteryPoints()}/{this.props.rank}</div>
+          <div
+            style={computedStyles.masteryCount}
+            styleName="mastery_count">{this.getCurrentMasteryPoints()}/{this.props.rank}
+          </div>
         </div>
         <div style={computedStyles.description} styleName="mastery_description">
           <div>{decodeURIComponent(this.props.name).replace(/\_+/g, ' ')}</div>

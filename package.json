@@ -20,6 +20,7 @@
     "bluebird": "3.4.6",
     "cheerio": "0.22.0",
     "immutable": "3.8.1",
+    "jimp": "0.2.27",
     "lodash": "4.16.1",
     "normalize-scss": "5.0.3",
     "react": "15.3.2",
