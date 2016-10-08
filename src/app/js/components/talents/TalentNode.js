@@ -4,7 +4,7 @@ import styles from './Talents.scss';
 import { find } from 'lodash';
 import { rankPointsSum, calculatePointsLeft } from '../../helpers';
 
-const { string, func, number } = PropTypes;
+const { string, func, number, arrayOf } = PropTypes;
 
 @CSSModules(styles)
 export default class TalentNode extends Component {
@@ -15,7 +15,7 @@ export default class TalentNode extends Component {
     branch: string.isRequired,
     rank: string.isRequired,
     tier: string.isRequired,
-    description: string.isRequired,
+    description: arrayOf(string).isRequired,
     pointsReq: string.isRequired,
     addMastery: func.isRequired,
     removeMastery: func.isRequired,
@@ -37,13 +37,30 @@ export default class TalentNode extends Component {
   }
 
   getCurrentMasteryPoints() {
-    const foundMastery = find(this.props.masteryState, { name: this.props.name });
+    const {masteryState, name} = this.props;
+    const foundMastery = find(masteryState, { name });
 
     if (foundMastery) {
       return foundMastery.activePoints;
     }
 
     return 0;
+  }
+
+  getCurrentDescription(){
+    const {masteryState, description, name} = this.props;
+    const foundMastery = find(masteryState, { name });
+
+
+
+    if(description){
+        if(foundMastery && foundMastery.activePoints > 0){
+          return description[foundMastery.activePoints - 1];
+        }
+      return description[0];
+    }
+
+    return 'loading';
   }
 
   isMasteryAvailable() {
@@ -91,7 +108,8 @@ export default class TalentNode extends Component {
         </div>
         <div style={computedStyles.description} styleName="mastery_description">
           <div>{decodeURIComponent(this.props.name).replace(/\_+/g, ' ')}</div>
-          {this.props.description}
+          <br/>
+          {this.getCurrentDescription()}
         </div>
       </div>
     );

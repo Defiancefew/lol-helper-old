@@ -1,5 +1,6 @@
 {
   "mainAddress" : "http://leagueoflegends.wikia.com",
+  "officialMasteryApi": "http://ddragon.leagueoflegends.com/cdn/6.20.1/data/en_US/mastery.json",
   "masteryAll" : {
     "ferocity"    : "Ferocity_Mastery_Tree_(2016)",
     "cunning"     : "Cunning_Mastery_Tree_(2016)",

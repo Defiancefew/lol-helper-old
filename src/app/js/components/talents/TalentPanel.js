@@ -39,14 +39,10 @@ export default class TalentPanel extends Component {
       const tiers = map(branch, (tierMasteries, key) => {
         const masteries = map(tierMasteries, mastery => {
           return (<TalentNode
-            masteryState={this.props.masteryState}
-            addMastery={this.props.addMastery}
-            removeMastery={this.props.removeMastery}
-            branch={branchName}
-            branchState={this.props.branchState}
+            {...this.props}
             {...mastery}
-            mouseX={this.state.mouseX}
-            mouseY={this.state.mouseY}
+            branch={branchName}
+            {...this.state}
             key={mastery.name}/>);
         })
 
