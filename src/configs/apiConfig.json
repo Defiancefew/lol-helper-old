@@ -1,4 +1,5 @@
 {
+  "apiAddr" : "https://euw.api.pvp.net/",
   "regions": [
     "BR",
     "EUNE",
@@ -11,5 +12,14 @@
     "OCE",
     "RU",
     "TR"
-  ]
+  ],
+  "responeErrors" : {
+    "400" : "Bad Request",
+    "401" : "Unauthorized",
+    "403" : "Forbidden",
+    "404" : "Not found",
+    "429" : "Rate limit exceeded",
+    "500" : "Internal server error",
+    "503" : "Service unavailable"
+  }
 }

@@ -2,5 +2,5 @@
 /.idea/
 /node_modules/
 /src/app/img/*.png
-masteries.json
 /src/configs/apiKey.json
+!/src/app/img/Masteries_background.png
