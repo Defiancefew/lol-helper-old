@@ -2,9 +2,9 @@ import { load } from 'cheerio';
 import { promisify, resolve, all } from 'bluebird';
 import request from 'request';
 import { flow, reduce, map } from 'lodash';
-import cfg from '../configs/mastery.json';
 import { writeFile } from 'fs';
 import jimp from 'jimp';
+import cfg from '../configs/mastery.json';
 
 const pRequestGet = promisify(request.get);
 
@@ -28,14 +28,15 @@ class MasteryFeed {
    */
   init() {
     return this.officialMasteryChain()
-      .then(officialDescription =>
-        flow(map, all)(this.config.masteryAll, (nameOfMasteryTree, key) =>
+      .then((officialDescription) => {
+        return flow(map, all)(this.config.masteryAll, (nameOfMasteryTree, key) =>
           this.check(
             `${this.config.mainAddress}/wiki/${nameOfMasteryTree}`,
             key,
-            officialDescription)))
+            officialDescription));
+            })
       .spread((...args) => {
-        const convertedMasteryArray = reduce(args, (prev, next, key) => {
+        const convertedMasteryArray = reduce(args, (prev, next) => {
           return { ...prev, ...next };
         }, {});
 
@@ -101,7 +102,14 @@ class MasteryFeed {
    @returns {array}
    */
   parseMasteriesUrl($, selector) {
-    return resolve($(selector).map((index, element) => $(element).attr('href')));
+    const memoize = [];
+
+    $(selector).each((index, element) => {
+       memoize.push($(element).attr('href'));
+     });
+
+    console.log(memoize);
+    return resolve(memoize);
   }
 
   /*
@@ -156,10 +164,10 @@ class MasteryFeed {
         return resolve();
       })
       .then(() => {
-        jimp.read(`./src/app/img/${name}.png`).then(image => {
+        jimp.read(`./src/app/img/${name}.png`).then(image =>
           image.greyscale()
-            .write(`./src/app/img/${name}-bw.png`);
-        })
+            .write(`./src/app/img/${name}-bw.png`)
+        )
           .catch(err => console.log(err));
       })
       .catch(err => console.log(err));
@@ -201,3 +209,6 @@ class MasteryFeed {
 }
 
 module.exports = new MasteryFeed(cfg);
+
+const test = new MasteryFeed(cfg);
+
