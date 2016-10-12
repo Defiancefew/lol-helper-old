@@ -55,7 +55,7 @@ const masteryActionHelper = (state, payload, type) => {
      */
     if (
       pointsReq > branchState[branch] ||
-      rankPointsSum(pointsReq, rank) === branchState[branch] ||
+      rankPointsSum(pointsReq, rank) <= branchState[branch] ||
       pointsLeft === 0) {
       return state;
     }

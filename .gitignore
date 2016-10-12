@@ -1,5 +1,6 @@
 
 /.idea/
+/.code/
 /node_modules/
 /src/app/img/*.png
 /src/configs/apiKey.json

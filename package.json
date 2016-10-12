@@ -29,7 +29,8 @@
     "react-router": "2.8.1",
     "redux": "3.6.0",
     "redux-form": "6.1.0",
-    "request": "2.75.0"
+    "request": "2.75.0",
+    "why-did-you-update": "0.0.8"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
