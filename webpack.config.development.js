@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -14,7 +13,10 @@ module.exports = {
     ],
     vendor: [
       'redux-thunk',
+      'react-css-modules',
+      'lodash',
       'redux-form',
+      'redux-logger',
       'redux',
       'react',
       'react-dom',
@@ -28,7 +30,6 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({

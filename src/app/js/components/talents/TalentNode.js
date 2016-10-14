@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes, Component, PureComponent } from 'react';
 import CSSModules from 'react-css-modules';
 import styles from './Talents.scss';
 import { find } from 'lodash';
@@ -7,7 +7,7 @@ import { rankPointsSum, calculatePointsLeft } from '../../helpers';
 const { string, func, number, arrayOf } = PropTypes;
 
 @CSSModules(styles)
-export default class TalentNode extends Component {
+export default class TalentNode extends PureComponent {
   state = {}
 
   static propTypes = {
@@ -22,18 +22,20 @@ export default class TalentNode extends Component {
     masteryState: PropTypes.object.isRequired
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps !== this.props;
+  onMouseMove = (e) => {
+    this.setState({ mouseX: e.pageX, mouseY: e.pageY });
   }
 
-  onClick = (e) => {
-    const { name, rank, tier, pointsReq, branch } = this.props;
-    this.props.addMastery({ name, rank, tier, pointsReq, branch });
-  }
+
 
   onContextMenu = () => {
     const { name, rank, tier, pointsReq, branch } = this.props;
     this.props.removeMastery({ name, rank, tier, pointsReq, branch });
+  }
+
+  onClick = () => {
+    const { name, rank, tier, pointsReq, branch } = this.props;
+    this.props.addMastery({ name, rank, tier, pointsReq, branch });
   }
 
   getCurrentMasteryPoints() {
@@ -47,16 +49,14 @@ export default class TalentNode extends Component {
     return 0;
   }
 
-  getCurrentDescription(){
+  getCurrentDescription() {
     const {masteryState, description, name} = this.props;
     const foundMastery = find(masteryState, { name });
 
-
-
-    if(description){
-        if(foundMastery && foundMastery.activePoints > 0){
-          return description[foundMastery.activePoints - 1];
-        }
+    if (description) {
+      if (foundMastery && foundMastery.activePoints > 0) {
+        return description[foundMastery.activePoints - 1];
+      }
       return description[0];
     }
 
@@ -85,8 +85,8 @@ export default class TalentNode extends Component {
         border: `1px solid ${this.isMasteryAvailable() ? 'yellow' : 'gray'}`
       },
       description: {
-        top: `${this.props.mouseY}px`,
-        left: `${this.props.mouseX + 20}px`
+        top: `${this.state.mouseY}px`,
+        left: `${this.state.mouseX + 20}px`
       },
       masteryCount: {
         border: `1px solid ${this.isMasteryAvailable() ? 'yellow' : 'lightgray'}`,
@@ -95,12 +95,11 @@ export default class TalentNode extends Component {
     }
 
     return (
-      <div styleName="mastery_icon_wrapper">
-        <div style={computedStyles.masteryIcon}
-             styleName="mastery_icon"
-             onClick={this.onClick}
-             onContextMenu={this.onContextMenu}
-        >
+      <div styleName="mastery_icon_wrapper" onMouseMove={this.onMouseMove}>
+        <div onClick={this.onClick} style={computedStyles.masteryIcon}
+          styleName="mastery_icon"
+          onContextMenu={this.onContextMenu}
+          >
           <div
             style={computedStyles.masteryCount}
             styleName="mastery_count">{this.getCurrentMasteryPoints()}/{this.props.rank}
@@ -108,7 +107,7 @@ export default class TalentNode extends Component {
         </div>
         <div style={computedStyles.description} styleName="mastery_description">
           <div>{decodeURIComponent(this.props.name).replace(/\_+/g, ' ')}</div>
-          <br/>
+          <br />
           {this.getCurrentDescription()}
         </div>
       </div>

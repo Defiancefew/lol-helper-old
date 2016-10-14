@@ -12,7 +12,6 @@ const { func, string, number } = PropTypes;
 @connect(({ talents }) => ({ ...talents.toJS() }), { ...talentActions })
 @CSSModules(styles)
 export default class TalentPanel extends Component {
-  state = {}
 
   static propTypes = {
     masteries: PropTypes.object,
@@ -34,43 +33,41 @@ export default class TalentPanel extends Component {
     this.props.loadMasteries()
   }
 
-  renderBranches() {
-    return map(this.props.masteries, (branch, branchName) => {
-      const tiers = map(branch, (tierMasteries, key) => {
-        const masteries = map(tierMasteries, mastery => {
-          return (<TalentNode
+  onClick = () => {
+    this.props.resetMastery();
+  }
+
+  render() {
+    const self = this;
+
+    const renderedMasteries = map(this.props.masteries, (branch, branchName) => {
+      const tiers = map(branch, (tierMasteries, tierIndex) => {
+        const masteries = map(tierMasteries, mastery => (
+          <TalentNode
             {...this.props}
             {...mastery}
+            onClick={() => self.onMasteryClick(mastery, branch)}
             branch={branchName}
-            {...this.state}
-            key={mastery.name}/>);
-        })
+            key={mastery.name}/>
+        ))
 
-        return (<div key={key} styleName="mastery_layer">{masteries}</div>)
+        return (<div key={branchName + tierIndex} styleName="mastery_layer">{masteries}</div>)
       });
+
+      const cleanBranchName = branchName.replace(branchName.charAt(0), branchName.charAt(0).toUpperCase());
 
       return (
         <div key={branchName} styleName="mastery_branch">
           {tiers}
           <div styleName="mastery_branch_name">
-            {branchName.replace(branchName.charAt(0), branchName.charAt(0).toUpperCase())}
+            {cleanBranchName}
             {' '}
             {this.props.branchState[branchName]}
           </div>
         </div>
       )
     })
-  }
 
-  onClick = () => {
-    this.props.resetMastery();
-  }
-
-  onMouseMove = (e) => {
-    this.setState({ mouseX: e.pageX, mouseY: e.pageY });
-  }
-
-  render() {
     return (
       <div styleName="mastery_wrapper">
         <div>
@@ -78,7 +75,7 @@ export default class TalentPanel extends Component {
           <div styleName="mastery_points_left">Points left : {this.props.pointsLeft}</div>
         </div>
         <div onMouseMove={this.onMouseMove}>
-          {this.renderBranches()}
+          {renderedMasteries}
         </div>
       </div>
     );
