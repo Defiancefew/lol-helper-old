@@ -22,11 +22,9 @@ export default class TalentNode extends PureComponent {
     masteryState: PropTypes.object.isRequired
   }
 
-  onMouseMove = (e) => {
+  onMouseMove = e => {
     this.setState({ mouseX: e.pageX, mouseY: e.pageY });
   }
-
-
 
   onContextMenu = () => {
     const { name, rank, tier, pointsReq, branch } = this.props;

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as talentActions from '../../modules/talents';
-import { map,empty } from 'lodash';
+import { map, isEmpty } from 'lodash';
 import CSSModules from 'react-css-modules';
 
 import TalentNode from './TalentNode';
@@ -9,7 +9,7 @@ import styles from './Talents.scss';
 
 const { func, string, number } = PropTypes;
 
-@connect(({ talents }) => ({ ...talents.toJS() }), { ...talentActions })
+@connect(({talents}) => ({ ...talents.toJS()}), { ...talentActions })
 @CSSModules(styles)
 export default class TalentPanel extends Component {
 
@@ -29,10 +29,8 @@ export default class TalentPanel extends Component {
     masteries: {}
   }
 
-  componentWillMount() {
-    if(empty(this.props.masteries)){
+  componentDidMount() {
       this.props.loadMasteries()
-    }
   }
 
   onClick = () => {
@@ -48,7 +46,6 @@ export default class TalentPanel extends Component {
           <TalentNode
             {...this.props}
             {...mastery}
-            onClick={() => self.onMasteryClick(mastery, branch)}
             branch={branchName}
             key={mastery.name}/>
         ))

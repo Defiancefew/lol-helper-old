@@ -14,7 +14,7 @@ const MASTERY_REMOVE = 'app/talents/MASTERY_REMOVE';
 const MASTERY_RESET = 'app/talents/MASTERY_RESET';
 
 export const loadMasteries = () =>
-  dispatch => {
+  (dispatch) => {
     dispatch({ type: FETCH_MASTERIES_START });
     if (process.env.NODE_ENV === 'development') {
       setTimeout(() => {
@@ -27,18 +27,18 @@ export const loadMasteries = () =>
     }
   };
 
-export const addMastery = (mastery) =>
-  dispatch => {
+export const addMastery = mastery =>
+  (dispatch) => {
     dispatch({ type: MASTERY_ADD, payload: mastery });
   };
 
-export const removeMastery = (mastery) =>
-  dispatch => {
+export const removeMastery = mastery =>
+  (dispatch) => {
     dispatch({ type: MASTERY_REMOVE, payload: mastery });
   };
 
 export const resetMastery = () =>
-  dispatch => {
+  (dispatch) => {
     dispatch({ type: MASTERY_RESET });
   };
 
@@ -48,11 +48,9 @@ const masteryActionHelper = (state, payload, type) => {
   const foundActiveMastery = state.get('masteryState').toJS()[name];
 
   if (type === MASTERY_ADD) {
-    /*
-     Block mastery adding if you don't have enough points required.B
-     Block the tier if masteries spent on this tier is enough to go further.
-     Block mastery adding if 30 points spent already.
-     */
+    // Block mastery adding if you don't have enough points required.B
+    // Block the tier if masteries spent on this tier is enough to go further.
+    // Block mastery adding if 30 points spent already.
     if (
       pointsReq > branchState[branch] ||
       rankPointsSum(pointsReq, rank) <= branchState[branch] ||
@@ -84,7 +82,12 @@ const masteryActionHelper = (state, payload, type) => {
     if (foundActiveMastery.activePoints === 0) {
       return state;
     }
-    //
+
+    // We can't remove lower-tier masteries before we remove the higher one
+    if (rankPointsSum(pointsReq, rank) < branchState[branch]) {
+      return state;
+    }
+
     return state
       .updateIn(['branchState', branch], score => score - 1)
       .updateIn(['masteryState', name, 'activePoints'], activePoints => activePoints - 1)
