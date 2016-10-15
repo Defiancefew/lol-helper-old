@@ -4,9 +4,10 @@ import { Provider } from 'react-redux';
 import configureStore from './configureStore';
 import { Router, hashHistory } from 'react-router';
 import { routes } from './routes';
-import '../sass/global.scss';
-import '../sass/fonts.scss';
+
 import '!style!css!normalize-css/normalize.css';
+import '!style!css!sass!../sass/fonts.scss';
+import '!style!css!sass!../sass/global.scss';
 
 const store = configureStore();
 

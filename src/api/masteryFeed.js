@@ -212,3 +212,5 @@ module.exports = new MasteryFeed(cfg);
 
 const test = new MasteryFeed(cfg);
 
+test.init().then(r => console.log(r));
+

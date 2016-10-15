@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as talentActions from '../../modules/talents';
-import { map } from 'lodash';
+import { map,empty } from 'lodash';
 import CSSModules from 'react-css-modules';
 
 import TalentNode from './TalentNode';
@@ -29,8 +29,10 @@ export default class TalentPanel extends Component {
     masteries: {}
   }
 
-  componentDidMount() {
-    this.props.loadMasteries()
+  componentWillMount() {
+    if(empty(this.props.masteries)){
+      this.props.loadMasteries()
+    }
   }
 
   onClick = () => {

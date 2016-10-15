@@ -69,7 +69,7 @@ module.exports = {
         loaders: [
           'style',
           'css?modules&sourceMap&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url',
+          'resolve-url?sourceMap',
           'sass?outputStyle=expanded&sourceMap'
         ],
         include: path.join(__dirname, 'src')
@@ -80,7 +80,7 @@ module.exports = {
         loaders: [
           'style',
           'css?modules&sourceMap&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url',
+          'resolve-url?sourceMap',
           'sass?indentedSyntax&sourceMap'
         ],
         include: path.join(__dirname, 'src')
