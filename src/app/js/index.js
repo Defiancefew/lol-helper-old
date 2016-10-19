@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
@@ -13,7 +14,7 @@ const store = configureStore();
 
 render(
   <Provider store={store}>
-    <Router history={hashHistory} routes={routes} />
+    <Router history={hashHistory} routes={routes}/>
   </Provider>,
   document.getElementById('root')
 );

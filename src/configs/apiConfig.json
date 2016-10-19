@@ -1,5 +1,5 @@
 {
-  "apiAddr" : "https://euw.api.pvp.net/",
+  "apiAddr" : "https://euw.api.pvp.net/api/lol/",
   "regions": [
     "BR",
     "EUNE",

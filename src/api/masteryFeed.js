@@ -1,7 +1,7 @@
 import { load } from 'cheerio';
-import { promisify, resolve, all } from 'bluebird';
+import { promisify, resolve, all, each } from 'bluebird';
 import request from 'request';
-import { flow, reduce, map } from 'lodash';
+import { flow, reduce, map, upperFirst } from 'lodash';
 import { writeFile } from 'fs';
 import jimp from 'jimp';
 import cfg from '../configs/mastery.json';
@@ -9,7 +9,7 @@ import cfg from '../configs/mastery.json';
 const pRequestGet = promisify(request.get);
 
 /*
- Builds mastery tree json, uses both lolwiki and official lol api.
+ Help script that builds mastery tree json, uses both lolwiki and official lol api.
  Since official api does not provide tier values, but simple coordinates
  and lolwiki does not provide clean description data we merge official
  description with other lolwiki data.
@@ -34,7 +34,7 @@ class MasteryFeed {
             `${this.config.mainAddress}/wiki/${nameOfMasteryTree}`,
             key,
             officialDescription));
-            })
+      })
       .spread((...args) => {
         const convertedMasteryArray = reduce(args, (prev, next) => {
           return { ...prev, ...next };
@@ -73,15 +73,24 @@ class MasteryFeed {
         url: singleMasteryUrl
       }))
       .map(({ page, url }) => page
-        .then(result => parseMasteryPage(
+        .then(result => flow(parseMasteryPage, resolve)(
           result,
           url,
           this.config.masterySelector,
-          officialTree))
+          officialTree,
+          upperFirst(key)))
+        .then(nonActivatedMasteryObject => this.addActiveMastery(nonActivatedMasteryObject))
         .catch(err => console.log(err)))
       .then(arrayOfMasteries => sortMasteryTree(arrayOfMasteries))
-      .then(masteryObject => ({ [key]: masteryObject }))
+      .then(masteryObject => masteryObject)
       .catch(err => console.log(err));
+  }
+
+  addActiveMastery(singleMasteryObject) {
+    if (singleMasteryObject.pointsReq == 0) {
+      return { ...singleMasteryObject, active: true };
+    }
+    return { ...singleMasteryObject, active: false };
   }
 
   /*
@@ -105,8 +114,8 @@ class MasteryFeed {
     const memoize = [];
 
     $(selector).each((index, element) => {
-       memoize.push($(element).attr('href'));
-     });
+      memoize.push($(element).attr('href'));
+    });
 
     console.log(memoize);
     return resolve(memoize);
@@ -120,7 +129,7 @@ class MasteryFeed {
    @param {object} selector - set of selectors we need to parse from the page
    @returns {object}
    */
-  parseMasteryPage(page, url, selector, officialMasteryTree) {
+  parseMasteryPage(page, url, selector, officialMasteryTree, nameOfMasteryTree) {
     const { image, link, ...rest } = selector;
     const name = cfg.regularForUrl
       .reduce((previous, current) => previous.replace(current, ''), url);
@@ -139,7 +148,7 @@ class MasteryFeed {
       }
 
       return { ...previous, [key]: page(current).text() };
-    }, { name });
+    }, { name, branch: nameOfMasteryTree });
 
     this.downloadMasteryImage(name, page(`${image}`).attr('src'));
 
@@ -180,10 +189,7 @@ class MasteryFeed {
    */
   sortMasteryTree(tree) {
     return flow(reduce, resolve)(tree, (previous, current) =>
-        (previous[current.tier])
-          ? ({ ...previous, [current.tier]: [...previous[current.tier], current] })
-          : ({ ...previous, [current.tier]: [current] })
-      , {});
+      ({ ...previous, [current.name]: current }), {});
   }
 
   /*
@@ -212,5 +218,5 @@ module.exports = new MasteryFeed(cfg);
 
 const test = new MasteryFeed(cfg);
 
-test.init().then(r => console.log(r));
+// test.init().then(r => console.log(r));
 

@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "hot-server": "node -r babel-register server.js",
-    "node": "node -r babel-register ./src/api/loginDriver.js",
-    "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./src/main.development",
+    "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register -remote-debugging-port=9222 ./src/main.development",
     "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\""
   },
   "keywords": [],
@@ -30,8 +29,10 @@
     "react-router": "2.8.1",
     "redux": "3.6.0",
     "redux-form": "6.1.0",
+    "redux-immutable": "3.0.8",
     "request": "2.75.0",
-    "why-did-you-update": "0.0.8"
+    "why-did-you-update": "0.0.8",
+    "react-addons-update": "15.3.2"
   },
   "devDependencies": {
     "autoprefixer": "6.5.0",
@@ -57,7 +58,7 @@
     "cssnano": "^3.6.2",
     "devtron": "^1.1.0",
     "electron-debug": "^1.0.0",
-    "electron-react-devtools": "^0.4.0",
+    "electron-react-devtools": "github:firejune/electron-react-devtools",
     "eslint": "^3.7.1",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-import": "^2.0.0",

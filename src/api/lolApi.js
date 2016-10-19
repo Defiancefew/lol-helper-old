@@ -21,7 +21,7 @@ class ApiDriver {
     const idOfChampion = (id === '') ? '' : `/${id}`;
 
     // TODO add region validation
-    const url = `${this.config.apiAddr}api/lol/${region}/v1.2/champion${idOfChampion}?api_key=${this.apiKey}${freeToPlayQuery}`;
+    const url = `${this.config.apiAddr}${region}/v1.2/champion${idOfChampion}?api_key=${this.apiKey}${freeToPlayQuery}`;
 
     return pRequestGet(url)
       .then(({ body }) => resolve(body))

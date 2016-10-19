@@ -73,11 +73,12 @@
     width: 33.3%;
     display: inline-block;
     border: 1px solid black;
-    padding: 0 10px;
+    padding: 0 40px;
   }
 
   &_branch_name {
     @extend %selection_none;
+    float: left;
     font-size: 26px;
     color: white;
     text-align: center;
@@ -93,7 +94,7 @@
   }
 
   &_wrapper {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     background: url('../../../img/Masteries_background.png') no-repeat center center;
     background-size: cover;
