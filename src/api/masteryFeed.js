@@ -1,5 +1,5 @@
 import { load } from 'cheerio';
-import { promisify, resolve, all, each } from 'bluebird';
+import { promisify, resolve, all } from 'bluebird';
 import request from 'request';
 import { flow, reduce, map, upperFirst } from 'lodash';
 import { writeFile } from 'fs';

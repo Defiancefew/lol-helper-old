@@ -1,5 +1,18 @@
 {
-  "apiAddr" : "https://euw.api.pvp.net/api/lol/",
+  "apiAddr": "https://euw.api.pvp.net/api/lol/",
+  "platformId": [
+    "BR1",
+    "EUN1",
+    "EUW1",
+    "JP1",
+    "KR",
+    "LA1",
+    "LA2",
+    "NA1",
+    "OC1",
+    "RU",
+    "TR1"
+  ],
   "regions": [
     "BR",
     "EUNE",
@@ -13,13 +26,49 @@
     "RU",
     "TR"
   ],
-  "responeErrors" : {
-    "400" : "Bad Request",
-    "401" : "Unauthorized",
-    "403" : "Forbidden",
-    "404" : "Not found",
-    "429" : "Rate limit exceeded",
-    "500" : "Internal server error",
-    "503" : "Service unavailable"
+  "responeErrors": {
+    "400": "Bad Request",
+    "401": "Unauthorized",
+    "403": "Forbidden",
+    "404": "Not found",
+    "429": "Rate limit exceeded",
+    "500": "Internal server error",
+    "503": "Service unavailable"
+  },
+  "championMastery": {
+    "url": "championmastery/location/"
+  },
+  "currentGame": {
+    "url": "observer-mode/rest/consumer/getSpectatorGameInfo/"
+  },
+  "featuredGames": {
+    "url": "observer-mode/rest/featured"
+  },
+  "recentGames": {
+    "url": "v1.3/game/by-summoner/"
+  },
+  "leagues": {
+    "url": "v2.5/league/"
+  },
+  "staticData": {
+    "url": "static-data/"
+  },
+  "lolStatus": {
+    "url": "http://status.leagueoflegends.com/shards"
+  },
+  "match": {
+    "url": "v2.2/match/"
+  },
+  "matchList": {
+    "url": "v2.2/matchlist/by-summoner/"
+  },
+  "stats": {
+    "url": "v1.3/stats/by-summoner/"
+  },
+  "summoner": {
+    "url": " v1.4/summoner/"
+  },
+  "team": {
+    "url": "v2.4/team/"
   }
 }
