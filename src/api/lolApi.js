@@ -1,10 +1,10 @@
 import { promisify } from 'bluebird';
-import { isNumber, isArray, isEmpty, isString, forEach, lowerFirst } from 'lodash';
+import { isNumber, isArray, isEmpty, isString, forEach, lowerFirst, upperFirst } from 'lodash';
 import { map, includes, flow, filter, every } from 'lodash/fp';
 import request from 'request';
 import { writeFile } from 'fs';
 
-import { apiKey } from '../configs/apiKey.json';
+// import { apiKey } from '../configs/apiKey.json';
 import { apiUrl, regions, apiTypes, numberKeyNames } from '../configs/apiConfig.json';
 import { defaultApiRegion } from '../configs/options.json';
 
@@ -14,7 +14,7 @@ const {
   currentGame,
   featuredGames,
   recentGames,
-  leagues,
+  league,
   staticData,
   lolStatus,
   match,
@@ -24,13 +24,6 @@ const {
   team
 } = apiTypes;
 
-const requestApiData = url => promisify(request.get)(url)
-  .then(({ statusCode, headers, body }) =>
-      ({ statusCode, headers, body }),
-    err => console.log(err))
-  .catch(err => console.log(err));
-
-
 const validateRegion = region => flow(map('short'), includes(region))(regions);
 const validateType = (name, type) => includes(type, apiTypes[name].type);
 const validateNumbers = params =>
@@ -38,6 +31,13 @@ const validateNumbers = params =>
     filter.convert({ cap: false })((v, k) => includes(k, numberKeyNames)),
     every(v => isNumber(v) || isArray(v) || isEmpty(v))
   )(params);
+
+const requestApiData = url => promisify(request.get)(url)
+  .then(({ statusCode, headers, body }) =>
+      ({ statusCode, headers, body }),
+    err => console.log(err))
+  .catch(err => console.log(err));
+
 
 // TODO Add error handler later
 // TODO Change this for multiple regions when options will be done.
@@ -50,29 +50,41 @@ const validateNumbers = params =>
  Requests limits are enforced per region.
  */
 
-class ApiDriver {
+class LolApi {
   /*
    @param {string} name
    @param {Object} params
    @returns {Promise}
    */
 
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+  }
+
   createQuery = (name, params, testLog) => {
     const basicUrl = `https://${defaultApiRegion}.${apiUrl}`;
-    const validParams = this[name](params);
-    const apiKeyQuery = `?api_key=${apiKey}`;
+    const validParams = this[`get${upperFirst(name)}`](params);
+    const apiKeyQuery = `?api_key=${this.apiKey}`;
 
-    if (params.region && validateRegion(params.region) && validateNumbers(params) && validParams) {
-      if (params.type && validateType(lowerFirst(name.replace('get', '')), params.type)) {
-        return false;
-      }
+    if (params.region && !validateRegion(params.region)) {
+      return false;
+    }
 
+    if (name === 'getStatus') {
+      return requestApiData(validParams);
+    }
+
+    if (params.type && !validateType(name, params.type)) {
+      return false;
+    }
+
+    if (validateNumbers(params) && validParams) {
       const finalUrl = (!isEmpty(validParams) && isArray(validParams))
         ? `${basicUrl}${validParams[0]}${apiKeyQuery}${validParams[1]}`
         : `${basicUrl}${validParams}${apiKeyQuery}`;
 
       if (testLog) {
-        return console.log(finalUrl);
+        return finalUrl;
       }
 
       return requestApiData(finalUrl);
@@ -92,15 +104,15 @@ class ApiDriver {
   getChampions = ({ region, championId = '', freeToPlay = false }) => {
     const baseQuery = `${region}/${champions.url}`;
 
-    if (isEmpty(championId)) {
-      return baseQuery;
-    }
-
     if (!freeToPlay) {
-      return `${baseQuery}/${championId}`;
+      if (!championId) {
+        return baseQuery;
+      }
+
+      return `${baseQuery}${championId}`;
     }
 
-    return [`${baseQuery}/${championId}`, champions.freeToPlay];
+    return [`${baseQuery}${championId}`, champions.freeToPlay];
   }
   /*
    Get champion mastery info
@@ -119,7 +131,7 @@ class ApiDriver {
       return type;
     };
 
-    return `${championMastery.url}/${region}/player/${summonerId}/${validType()}`;
+    return `${championMastery.url}${region}/player/${summonerId}/${validType()}`;
   }
 
   /*
@@ -142,7 +154,7 @@ class ApiDriver {
    @param {string} region - required
    @returns {string|boolean}
    */
-  getFeaturedGames = ({ region }) => `${region}/${featuredGames.url}`;
+  getFeaturedGames = () => `${featuredGames.url}`;
 
   /*
    Get recent  games by summoner id.
@@ -151,7 +163,7 @@ class ApiDriver {
    @param {number} summonerId - required
    @returns {string}
    */
-  getRecentGames = ({ region, summonerId }) => `${region}${recentGames.url}${summonerId}/recent`
+  getRecentGames = ({ region, summonerId }) => `${region}/${recentGames.url}${summonerId}/recent`
 
   /*
    Get leagues mapped by summoner\team id or overall challenger and master.
@@ -162,15 +174,16 @@ class ApiDriver {
    @param {boolean} entry
    @returns {string}
    */
-  getLeagues = ({ region, type, id = '', entry = false }) => {
+  getLeague = ({ region, type, id = '', entry = false }) => {
     const validType = () => {
-      if (!isEmpty(id)) {
-        return (!entry) ? `${type}/${id}` : `${type}/${id}/entry`;
+      if (id) {
+        const preparedId = (isArray(id)) ? id.join(',') : id;
+        return (!entry) ? `by-${type}/${preparedId}` : `by-${type}/${preparedId}/entry`;
       }
       return type;
     };
 
-    return `${region}/${leagues.url}${validType()}`;
+    return `${region}/${league.url}${validType()}`;
   }
 
   /*
@@ -184,14 +197,8 @@ class ApiDriver {
    @returns {string}
    */
   getStaticData = ({ region, type, id = '' }) => {
-    const validType = () => {
-      if (id) {
-        return `${type}/${id}`;
-      }
-      return type;
-    };
-
-    return `${staticData.url}/${region}/v1.2/${validType()}`;
+    const queryType = id ? `${type}/${id}` : type;
+    return `${staticData.url}${region}/v1.2/${queryType}`;
   }
 
   /*
@@ -228,7 +235,7 @@ class ApiDriver {
    @param {number} summonerId
    @returns {string}
    */
-  getStats = ({ region, type, summonerId }) => `${apiUrl}${region}/${stats.url}${summonerId}/${type}`;
+  getStats = ({ region, type, summonerId }) => `${region}/${stats.url}${summonerId}/${type}`;
 
   /*
    Get summoner info. You can search both by name, id, name[], id[]
@@ -239,17 +246,27 @@ class ApiDriver {
    @param {number|string|string[]|number[]} summonerId - get summoner or summoner objects
    @returns {string}
    */
-  getSummoner = ({ region, type, summonerId }) => {
+  getSummoner = ({ region, type, summonerId, name }) => {
     const validType = () => {
+      if (isString(name) && !type) {
+        return `by-name/${name}`;
+      }
+
+      if (isArray(name) && !type) {
+        if (every(isString, name)) {
+          return `by-name/${name.join(',')}`;
+        }
+      }
+
+      if (isNumber(summonerId)) {
+        return type ? `${summonerId}/${type}` : summonerId;
+      }
+
       if (isArray(summonerId)) {
-        return `by-name/${summonerId.join(',')}`;
+        if (every(isNumber, summonerId)) {
+          return type ? `${summonerId.join(',')}/${type}` : summonerId.join(',');
+        }
       }
-
-      if (isString(summonerId)) {
-        return `by-name/${summonerId}`;
-      }
-
-      return `${summonerId}/${type}`;
     };
 
     return `${region}/${summoner.url}${validType()}`;
@@ -263,15 +280,16 @@ class ApiDriver {
    */
   getTeam = ({ region, type, id }) => {
     const validType = () => {
+      const preparedId = isArray(id) ? id.join(',') : id;
+
       if (type === 'summoner') {
-        return `by-${type}/${id}`;
+        return `by-${type}/${preparedId}`;
       }
-      return id;
+      return preparedId;
     };
 
     return `${region}/${team.url}${validType()}`;
   }
 }
 
-module.exports = new ApiDriver();
-
+module.exports = LolApi;

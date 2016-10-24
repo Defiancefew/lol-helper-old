@@ -57,11 +57,11 @@
   },
   "apiTypes": {
     "champions": {
-      "url": "v1.2/champion",
+      "url": "v1.2/champion/",
       "freeToPlay": "&freeToPlay=true"
     },
     "championMastery": {
-      "url": "championmastery/location",
+      "url": "championmastery/location/",
       "type": [
         "champions",
         "score",
@@ -77,7 +77,7 @@
     "recentGames": {
       "url": "v1.3/game/by-summoner/"
     },
-    "leagues": {
+    "league": {
       "url": "v2.5/league/",
       "type": [
         "summoner",
@@ -87,7 +87,7 @@
       ]
     },
     "staticData": {
-      "url": "static-data",
+      "url": "static-data/",
       "type": [
         "champion",
         "item",
@@ -120,15 +120,14 @@
     "summoner": {
       "url": "v1.4/summoner/",
       "type": [
-        "names",
-        "id",
         "masteries",
         "name",
         "runes"
       ]
     },
     "team": {
-      "url": "v2.4/team/"
+      "url": "v2.4/team/",
+      "type": ["summoner", "team"]
     }
   },
   "numberKeyNames": [
