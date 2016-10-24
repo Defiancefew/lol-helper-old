@@ -22,8 +22,7 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(webpackHotMiddleware(compiler, {
   log: console.log,
-  path: '/__webpack_hmr',
-  reload: true
+  path: '/__webpack_hmr'
 }));
 
 app.get("/", function (req, res) {
