@@ -1,0 +1,139 @@
+{
+  "apiUrl": "api.pvp.net/api/lol/",
+  "regions": {
+    "Brazil": {
+      "short": "BR",
+      "platformId": "BR1"
+    },
+    "EuNordicEast": {
+      "short": "EUNE",
+      "platformId": "EUN1"
+    },
+    "EuWest": {
+      "short": "EUW",
+      "platformId": "EUW1"
+    },
+    "Japan": {
+      "short": "JP",
+      "platformId": "JP1"
+    },
+    "Korean": {
+      "short": "KR",
+      "platformId": "KR"
+    },
+    "LatinAmericaNorth": {
+      "short": "LAN",
+      "platformId": "LA1"
+    },
+    "LatinAmericaSouth": {
+      "short": "LAS",
+      "platformId": "LA2"
+    },
+    "NorthAmerica": {
+      "short": "NA",
+      "platformId": "NA1"
+    },
+    "Oceanic": {
+      "short": "OCE",
+      "platformId": "OC1"
+    },
+    "Russian": {
+      "short": "RU",
+      "platformId": "RU"
+    },
+    "Turkish": {
+      "short": "TR",
+      "platformId": "TR1"
+    }
+  },
+  "responseErrors": {
+    "400": "Bad Request",
+    "401": "Unauthorized",
+    "403": "Forbidden",
+    "404": "Not found",
+    "429": "Rate limit exceeded",
+    "500": "Internal server error",
+    "503": "Service unavailable"
+  },
+  "apiTypes": {
+    "champions": {
+      "url": "v1.2/champion",
+      "freeToPlay": "&freeToPlay=true"
+    },
+    "championMastery": {
+      "url": "championmastery/location",
+      "type": [
+        "champions",
+        "score",
+        "topchampions"
+      ]
+    },
+    "currentGame": {
+      "url": "observer-mode/rest/consumer/getSpectatorGameInfo/"
+    },
+    "featuredGames": {
+      "url": "observer-mode/rest/featured"
+    },
+    "recentGames": {
+      "url": "v1.3/game/by-summoner/"
+    },
+    "leagues": {
+      "url": "v2.5/league/",
+      "type": [
+        "summoner",
+        "team",
+        "challenger",
+        "master"
+      ]
+    },
+    "staticData": {
+      "url": "static-data",
+      "type": [
+        "champion",
+        "item",
+        "language-strings",
+        "languages",
+        "map",
+        "mastery",
+        "realm",
+        "rune",
+        "summoner-spell",
+        "versions"
+      ]
+    },
+    "lolStatus": {
+      "url": "http://status.leagueoflegends.com/shards"
+    },
+    "match": {
+      "url": "v2.2/match/"
+    },
+    "matchList": {
+      "url": "v2.2/matchlist/by-summoner/"
+    },
+    "stats": {
+      "url": "v1.3/stats/by-summoner/",
+      "type": [
+        "ranked",
+        "summary"
+      ]
+    },
+    "summoner": {
+      "url": "v1.4/summoner/",
+      "type": [
+        "names",
+        "id",
+        "masteries",
+        "name",
+        "runes"
+      ]
+    },
+    "team": {
+      "url": "v2.4/team/"
+    }
+  },
+  "numberKeyNames": [
+    "id",
+    "summonerId",
+    "matchId"
+  ]
+}

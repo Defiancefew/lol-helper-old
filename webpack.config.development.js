@@ -1,10 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval',
   target: 'electron-renderer',
   debug: true,
   entry: {
@@ -14,7 +13,10 @@ module.exports = {
     ],
     vendor: [
       'redux-thunk',
+      'react-css-modules',
+      'lodash',
       'redux-form',
+      'redux-logger',
       'redux',
       'react',
       'react-dom',
@@ -28,7 +30,6 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -68,7 +69,7 @@ module.exports = {
         loaders: [
           'style',
           'css?modules&sourceMap&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url',
+          'resolve-url?sourceMap',
           'sass?outputStyle=expanded&sourceMap'
         ],
         include: path.join(__dirname, 'src')
@@ -79,7 +80,7 @@ module.exports = {
         loaders: [
           'style',
           'css?modules&sourceMap&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url',
+          'resolve-url?sourceMap',
           'sass?indentedSyntax&sourceMap'
         ],
         include: path.join(__dirname, 'src')

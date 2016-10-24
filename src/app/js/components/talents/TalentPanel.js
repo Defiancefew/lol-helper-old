@@ -1,18 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as talentActions from '../../modules/talents';
-import { map } from 'lodash';
+import { filter, map, isEmpty, eq, flow, groupBy, tap, conforms, chain, uniq, upperFirst } from 'lodash';
 import CSSModules from 'react-css-modules';
-
-import TalentNode from './TalentNode';
+import TalentTree from './TalentTree';
 import styles from './Talents.scss';
 
 const { func, string, number } = PropTypes;
 
-@connect(({ talents }) => ({ ...talents.toJS() }), { ...talentActions })
+@connect(({ talents }) => ({ ...talents }), { ...talentActions })
 @CSSModules(styles)
 export default class TalentPanel extends Component {
-  state = {}
+  state = {
+    mouseX: 0,
+    mouseY: 0
+  }
 
   static propTypes = {
     masteries: PropTypes.object,
@@ -26,51 +28,21 @@ export default class TalentPanel extends Component {
     )
   }
 
-  static defaultProps = {
-    masteries: {}
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props !== nextProps;
   }
 
   componentDidMount() {
-    this.props.loadMasteries()
-  }
-
-  renderBranches() {
-    return map(this.props.masteries, (branch, branchName) => {
-      const tiers = map(branch, (tierMasteries, key) => {
-        const masteries = map(tierMasteries, mastery => {
-          return (<TalentNode
-            masteryState={this.props.masteryState}
-            addMastery={this.props.addMastery}
-            removeMastery={this.props.removeMastery}
-            branch={branchName}
-            branchState={this.props.branchState}
-            {...mastery}
-            mouseX={this.state.mouseX}
-            mouseY={this.state.mouseY}
-            key={mastery.name}/>);
-        })
-
-        return (<div key={key} styleName="mastery_layer">{masteries}</div>)
-      });
-
-      return (
-        <div key={branchName} styleName="mastery_branch">
-          {tiers}
-          <div styleName="mastery_branch_name">
-            {branchName.replace(branchName.charAt(0), branchName.charAt(0).toUpperCase())}
-            {' '}
-            {this.props.branchState[branchName]}
-          </div>
-        </div>
-      )
-    })
+    if (isEmpty(this.props.masteries)) {
+      this.props.loadMasteries()
+    }
   }
 
   onClick = () => {
     this.props.resetMastery();
   }
 
-  onMouseMove = (e) => {
+  onMouseMove = e => {
     this.setState({ mouseX: e.pageX, mouseY: e.pageY });
   }
 
@@ -79,10 +51,12 @@ export default class TalentPanel extends Component {
       <div styleName="mastery_wrapper">
         <div>
           <button styleName="mastery_return_button" onClick={this.onClick}>Return points</button>
-          <div styleName="mastery_points_left">Points left : {this.props.pointsLeft}</div>
+          <div styleName="mastery_points_left">Points left :
+            {this.props.pointsLeft}
+          </div>
         </div>
         <div onMouseMove={this.onMouseMove}>
-          {this.renderBranches()}
+          <TalentTree  {...this.state} {...this.props} />
         </div>
       </div>
     );

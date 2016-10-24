@@ -1,0 +1,5 @@
+@import "mixins";
+
+body {
+  @include font-face(OpenSansRegular, '../fonts/OpenSansRegular', null, null, eot woff ttf);
+}

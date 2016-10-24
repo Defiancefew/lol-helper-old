@@ -52,6 +52,7 @@
     margin: 10px 0;
     outline: none;
     color: White;
+    margin-left: 20px;
     background-color: black;
     padding: 10px 15px;
     font-size: 16px;
@@ -61,6 +62,7 @@
     @extend %selection_none;
     color: yellow;
     font-size: 24px;
+    margin-left: 20px;
   }
 
   &_description {
@@ -73,11 +75,12 @@
     width: 33.3%;
     display: inline-block;
     border: 1px solid black;
-    padding: 0 10px;
+    padding: 0 40px;
   }
 
   &_branch_name {
     @extend %selection_none;
+    float: left;
     font-size: 26px;
     color: white;
     text-align: center;
@@ -93,7 +96,7 @@
   }
 
   &_wrapper {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     background: url('../../../img/Masteries_background.png') no-repeat center center;
     background-size: cover;

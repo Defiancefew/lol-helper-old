@@ -1,5 +1,10 @@
 
 /.idea/
+/.code/
 /node_modules/
 /src/app/img/*.png
-masteries.json
+/src/configs/apiKey.json
+!/src/app/img/Masteries_background.png
+/yarn.lock
+/jsconfig.json
+/.vscode
