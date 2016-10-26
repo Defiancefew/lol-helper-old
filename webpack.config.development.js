@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'eval-source-map',
   target: 'electron-renderer',
   debug: true,
   entry: {

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import CSSModules from 'react-css-modules';
+import cssModules from 'react-css-modules';
 import { find } from 'lodash';
 import styles from './Talents.scss';
 
@@ -19,11 +19,11 @@ const TalentNode = (props) => {
     return description[0];
   };
 
-  const onWheel = ({ e, mastery }) => {
+  const onWheel = ({ e, changedMastery }) => {
     if (e.deltaY < 0) {
-      props.addMastery({ ...mastery });
+      props.addMastery({ ...changedMastery });
     } else if (e.deltaY > 0) {
-      props.removeMastery({ ...mastery });
+      props.removeMastery({ ...changedMastery });
     }
   };
 
@@ -75,6 +75,7 @@ TalentNode.propTypes = {
   addMastery: func.isRequired,
   removeMastery: func.isRequired,
   currentPoints: number.isRequired,
+  active: bool.isRequired,
   mastery: PropTypes.shape({
     name: string.isRequired,
     rank: string.isRequired,
@@ -85,4 +86,4 @@ TalentNode.propTypes = {
   mouseY: number.isRequired,
 };
 
-export default CSSModules(styles)(TalentNode);
+export default cssModules(styles)(TalentNode);

@@ -1,15 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import cssModules from 'react-css-modules';
+import { isEmpty } from 'lodash';
 import * as talentActions from '../../modules/talents';
-import { filter, map, isEmpty, eq, flow, groupBy, tap, conforms, chain, uniq, upperFirst } from 'lodash';
-import CSSModules from 'react-css-modules';
 import TalentTree from './TalentTree';
 import styles from './Talents.scss';
 
-const { func, string, number } = PropTypes;
+const { string, number } = PropTypes;
 
 @connect(({ talents }) => ({ ...talents }), { ...talentActions })
-@CSSModules(styles)
+@cssModules(styles)
 export default class TalentPanel extends Component {
   state = {
     mouseX: 0,
@@ -56,7 +56,7 @@ export default class TalentPanel extends Component {
           </div>
         </div>
         <div onMouseMove={this.onMouseMove}>
-          <TalentTree  {...this.state} {...this.props} />
+          <TalentTree {...this.state} {...this.props} />
         </div>
       </div>
     );

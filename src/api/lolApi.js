@@ -4,7 +4,7 @@ import { map, includes, flow, filter, every } from 'lodash/fp';
 import request from 'request';
 import { writeFile } from 'fs';
 
-// import { apiKey } from '../configs/apiKey.json';
+import { apiKey } from '../configs/apiKey.json';
 import { apiUrl, regions, apiTypes, numberKeyNames } from '../configs/apiConfig.json';
 import { defaultApiRegion } from '../configs/options.json';
 
@@ -33,8 +33,7 @@ const validateNumbers = params =>
   )(params);
 
 const requestApiData = url => promisify(request.get)(url)
-  .then(({ statusCode, headers, body }) =>
-      ({ statusCode, headers, body }),
+  .then(({ statusCode, headers, body }) => writeFile('./items.json', JSON.stringify(body), err => console.log(err)),
     err => console.log(err))
   .catch(err => console.log(err));
 
@@ -62,7 +61,7 @@ class LolApi {
   }
 
   createQuery = (name, params, testLog) => {
-    const basicUrl = `https://${defaultApiRegion}.${apiUrl}`;
+    const basicUrl = `https://${(name === 'staticData') ? 'global' : defaultApiRegion}.${apiUrl}`;
     const validParams = this[`get${upperFirst(name)}`](params);
     const apiKeyQuery = `?api_key=${this.apiKey}`;
 
@@ -293,3 +292,7 @@ class LolApi {
 }
 
 module.exports = LolApi;
+
+const api = new LolApi(apiKey);
+
+console.log(api.createQuery('staticData', { region: 'EUW', type: 'item' }));

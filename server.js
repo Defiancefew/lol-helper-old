@@ -10,10 +10,6 @@ const compiler = webpack(config);
 const PORT = 3000;
 
 app.use(webpackDevMiddleware(compiler, {
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: true
-  },
   publicPath: config.output.publicPath,
   stats: {
     colors: true

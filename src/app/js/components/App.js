@@ -13,6 +13,9 @@ export default props => {
         <li className="nav_list">
           <Link className="nav" activeClassName="nav_active" to="/talents">Talents</Link>
         </li>
+        <li className="nav_list">
+          <Link className="nav" activeClassName="nav_active" to="/search">Search</Link>
+        </li>
       </ul>
       <div>
         {props.children}
