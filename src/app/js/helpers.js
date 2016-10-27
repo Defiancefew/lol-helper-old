@@ -26,3 +26,7 @@ export const isMasteryAvailable = ({ branchState, masteryState, mastery }) => {
 
   return false;
 };
+
+export const composeStaticData = () => {
+  return reduce();
+}

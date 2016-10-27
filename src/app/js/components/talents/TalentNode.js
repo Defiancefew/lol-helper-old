@@ -19,11 +19,11 @@ const TalentNode = (props) => {
     return description[0];
   };
 
-  const onWheel = ({ e, changedMastery }) => {
+  const onWheel = (e,changedMastery) => {
     if (e.deltaY < 0) {
-      props.addMastery({ ...changedMastery });
+      props.addMastery(changedMastery);
     } else if (e.deltaY > 0) {
-      props.removeMastery({ ...changedMastery });
+      props.removeMastery(changedMastery);
     }
   };
 
@@ -47,7 +47,7 @@ const TalentNode = (props) => {
       styleName="mastery_icon_wrapper"
       onContextMenu={() => props.removeMastery(mastery)}
       onClick={() => props.addMastery(mastery)}
-      onWheel={e => onWheel({ e, mastery })}
+      onWheel={e => onWheel(e, mastery)}
     >
       <div
         style={computedStyles.masteryIcon}
@@ -79,7 +79,7 @@ TalentNode.propTypes = {
   mastery: PropTypes.shape({
     name: string.isRequired,
     rank: string.isRequired,
-    active: bool.isRequired,
+    active: bool,
     description: PropTypes.arrayOf(string).isRequired
   }),
   mouseX: number.isRequired,

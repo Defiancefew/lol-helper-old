@@ -5,7 +5,7 @@ import styles from './SearchNode.scss';
 
 const SearchNode = (props) => {
   const computedStyle = {
-    backgroundImage: `url(./img/items/${props.image.sprite})`,
+    backgroundImage: `url(./img/sprites/item/${props.image.sprite})`,
     backgroundPosition: `${-props.image.x}px ${-props.image.y}px`,
     width: props.image.w,
     height: props.image.h

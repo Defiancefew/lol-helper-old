@@ -5,7 +5,7 @@ import SearchNode from './SearchNode';
 import { Cogwheel } from '../Icons';
 
 const SearchAutoSuggest = (props) => {
-  if (isEmpty(props.suggestions)) {
+  if (isEmpty(props.suggestions) && props.value) {
     return <div>Sorry,nothing found :(</div>
   }
 

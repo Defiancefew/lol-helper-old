@@ -1,5 +1,18 @@
 {
   "apiUrl": "api.pvp.net/api/lol/",
+  "dDragon": {
+    "url": "http://ddragon.leagueoflegends.com/",
+    "types": [
+      "champion",
+      "item",
+      "map",
+      "mastery",
+      "profileicon",
+      "rune",
+      "summoner"
+    ],
+    "versionsPath": "../offline/versions.json"
+  },
   "regions": {
     "Brazil": {
       "short": "BR",
@@ -127,7 +140,10 @@
     },
     "team": {
       "url": "v2.4/team/",
-      "type": ["summoner", "team"]
+      "type": [
+        "summoner",
+        "team"
+      ]
     }
   },
   "numberKeyNames": [

@@ -1,7 +1,7 @@
 import { remote } from 'electron';
 import update from 'react-addons-update';
 import { calculatePointsLeft, rankPointsSum } from '../helpers';
-import testMasteries from '../../../offline/masteries.json';
+import testMasteries from '../../../offline/masteries_composed.json';
 
 const fetchMasteries = remote.require('./api/masteryFeed');
 

@@ -295,4 +295,4 @@ module.exports = LolApi;
 
 const api = new LolApi(apiKey);
 
-console.log(api.createQuery('staticData', { region: 'EUW', type: 'item' }));
+// console.log(api.createQuery('staticData', { region: 'EUW', type: 'item' }));

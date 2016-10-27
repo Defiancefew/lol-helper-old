@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { debounce } from 'lodash';
 import _ from 'lodash/fp';
 // import cssModules from 'react-css-modules';
-import { data } from '../../../../offline/items.json';
+import { data } from '../../../../offline/item.json';
 import SearchAutoSuggest from './SearchAutoSuggest';
-import Filter from './SearchFilter';
+import SearchFilter from './SearchFilter';
 import './SearchNode.scss';
 import * as searchActions from '../../modules/search';
+import { FilterIcon } from '../Icons';
 
 @connect(({ search }) => ({ ...search }), { ...searchActions })
 export default class Search extends Component {
@@ -15,10 +16,14 @@ export default class Search extends Component {
     super(props);
     this.state = {
       value: '',
-      searchValue: [],
+      suggestions: [],
       searching: false
     };
     this.delayedSearchInData = debounce(this.searchInData, 300);
+  }
+
+  componentDidMount() {
+      this.props.fetchData();
   }
 
   onChange = (e) => {
@@ -27,16 +32,16 @@ export default class Search extends Component {
   }
 
   searchInData() {
-    const searchValue = _.flow(
+    const suggestions = _.flow(
       _.map.convert({ cap: false })((item, key) => ({ id: key, ...item })),
       _.filter(filteredItem =>
         (this.state.value !== '' && new RegExp(this.state.value).test(filteredItem.name))))(data);
 
-    this.setState({ searchValue, searching: false });
+    this.setState({ suggestions, searching: false });
   }
 
   onClick = () => {
-    this.setState({ value: '', searchValue: [] });
+    this.setState({ value: '', suggestions: [] });
   }
 
   chooseValue = (name) => {
@@ -46,13 +51,12 @@ export default class Search extends Component {
   render() {
     return (
       <div>
-        <Filter filters={this.props.filters} />
+        <SearchFilter filters={this.props.filters} changeFilter={this.props.changeFilter} />
         <input value={this.state.value} onChange={this.onChange} type="text" />
         <button onClick={this.onClick}>x</button>
         <SearchAutoSuggest
           chooseValue={this.chooseValue}
-          suggestions={this.state.searchValue}
-          searching={this.state.searching}
+          {...this.state}
         />
       </div>
     );

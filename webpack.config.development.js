@@ -8,14 +8,14 @@ module.exports = {
   debug: true,
   entry: {
     bundle: [
-      'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr&reload=true',
+      'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
       './src/app/js/index'
     ],
     vendor: [
       'redux-thunk',
+      'electron',
       'react-css-modules',
       'lodash',
-      'redux-form',
       'redux-logger',
       'redux',
       'react',
@@ -53,7 +53,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['babel'],
+        loader: 'babel',
         include: path.join(__dirname, 'src')
       },
       {
