@@ -1,4 +1,4 @@
-import { promisify, resolve } from 'bluebird';
+import { promisify, resolve, reduce as pReduce } from 'bluebird';
 import request from 'request';
 import { readFile, mkdir, writeFile } from 'fs';
 import { map, isArray } from 'lodash';
@@ -6,6 +6,7 @@ import { uniq, flow, filter, map as fmap } from 'lodash/fp';
 import { defaultApiRegion } from '../configs/options.json';
 import { dDragon } from '../configs/apiConfig.json';
 import { fileExists, directoryExists } from './nodeHelpers';
+import path from 'path';
 
 const pRequestGet = promisify(request.get);
 const pReadFile = promisify(readFile);
@@ -13,7 +14,7 @@ const pMkdir = promisify(mkdir);
 
 const versions = `${dDragon.url}realms/${defaultApiRegion}.json`;
 
-export const fetchVersions = () => {
+const fetchVersions = () => {
   if (!fileExists(dDragon.versionsPath)) {
     return pRequestGet(versions).then((response) => {
       writeFile(dDragon.versionsPath, JSON.stringify(response.body), err => console.log(err));
@@ -27,7 +28,7 @@ export const fetchVersions = () => {
     .catch(err => console.log(err));
 };
 
-export const fetchData = () => fetchVersions
+const fetchData = () => fetchVersions
   .then(response =>
     map(response.body.n, (version, key) => {
       const pathName = `../offline/${key}.json`;
@@ -85,15 +86,27 @@ const downloadSprite = (spriteUrl, spriteType) =>
       .then(({ body }) => saveSprite(body, spriteType, singleUrl))
       .catch(err => console.log(err)));
 
-export const fetchSprites = () =>
-  map(dDragon.types, (value) =>
+const fetchSprites = () =>
+  map(dDragon.types, value =>
     pReadFile(`../offline/${value}.json`, 'utf8')
       .then(content => flow(JSON.parse, prepareSingleDataObject, resolve)(content))
       .then(spriteString => downloadSprite(spriteString, value))
       .catch(err => console.log(err)));
 
-export const getData = () =>
-  flow(map, resolve)(dDragon.types, type =>
-    pReadFile(`../offline/${type}.json`, 'utf8')
-      .then(content => JSON.parse(content))
-      .catch(err => console.log(err)));
+// const getData = () => {
+//   return flow(map, all)(dDragon.types, type => {
+//     return pReadFile(`./src/offline/${type}.json`, 'utf8');
+//   });
+// };
+
+const getData = () =>
+  pReduce(dDragon.types, (total, type) => {
+    return pReadFile(`./src/offline/${type}.json`, 'utf8')
+      .then(content => {
+        return { ...total, [type]: JSON.parse(content).data };
+      });
+  }, {}).then(object => resolve(object));
+
+module.exports = {
+  getData
+};

@@ -13,26 +13,22 @@ const CHANGE_FILTER_VALUE = 'app/search/CHANGE_FILTER_VALUE';
 export const changeFilter = filter => ({ type: CHANGE_FILTER_VALUE, payload: filter });
 
 export const fetchData = () =>
-  (dispatch, getState) => {
+  (dispatch) => {
     // TODO Add this when options will be done
     // if (getState().options.apiKey) {
     //
     // }
     dispatch({ type: FETCH_STATIC_DATA_START });
-    dragonApi.getData()
+    return dragonApi.getData()
       .then(response =>
-        dispatch({
-          type: FETCH_STATIC_DATA_SUCCESS,
-          payload: response
-        }))
+        dispatch({ type: FETCH_STATIC_DATA_SUCCESS, payload: response }))
       .catch(err => dispatch({ type: FETCH_STATIC_DATA_ERROR, payload: err }));
   };
 
 const initialState = {
   filters: {
-    champions: true,
-    items: true,
-    summonerspells: true,
+    champion: true,
+    item: true,
     mastery: true,
     rune: true,
     summoner: true

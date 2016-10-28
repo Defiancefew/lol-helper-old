@@ -3,26 +3,34 @@ import cssModules from 'react-css-modules';
 import { map, isEmpty } from 'lodash';
 import SearchNode from './SearchNode';
 import { Cogwheel } from '../Icons';
+import styles from './SearchNode.scss';
 
 const SearchAutoSuggest = (props) => {
   if (isEmpty(props.suggestions) && props.value) {
-    return <div>Sorry,nothing found :(</div>
+    return <div>Sorry,nothing found :(</div>;
   }
 
   if (props.searching) {
-    return <div><Cogwheel /> Loading...</div>
+    return <div><Cogwheel /> Loading...</div>;
   }
 
-  const listOfSuggestions = map(props.suggestions, (item) => {
-    return (
-      <div key={item.id}>
-        <SearchNode {...props} {...item} />
-      </div>
-    );
+  const listOfSuggestions = map(props.suggestions, (category) => {
+    return map(category, (node,nodeName) => {
+      return (
+        <div key={nodeName}>
+          <SearchNode {...props} {...node} />
+        </div>
+      )
+    })
+    // return (
+    //   <div key={item.id}>
+    //     <SearchNode {...props} {...item} />
+    //   </div>
+    // );
   });
 
   return (
-    <div>
+    <div styleName="search_suggest_wrapper">
       {listOfSuggestions}
     </div>
   );
@@ -30,7 +38,8 @@ const SearchAutoSuggest = (props) => {
 
 SearchAutoSuggest.propTypes = {
   suggestions: PropTypes.arrayOf(PropTypes.shape({})),
-  searching: PropTypes.bool.isRequired
+  searching: PropTypes.bool.isRequired,
+  value: PropTypes.string.isRequired
 };
 
-export default SearchAutoSuggest;
+export default cssModules(styles)(SearchAutoSuggest);

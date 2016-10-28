@@ -4,8 +4,18 @@ const { number, string, func } = PropTypes;
 import styles from './SearchNode.scss';
 
 const SearchNode = (props) => {
+  const imagePath = (group) => {
+    if (group === 'gray_mastery') {
+      return 'mastery';
+    } else if (group === 'spell') {
+      return 'summoner';
+    }
+
+    return group;
+  };
+
   const computedStyle = {
-    backgroundImage: `url(./img/sprites/item/${props.image.sprite})`,
+    backgroundImage: `url(./img/sprites/${imagePath(props.image.group)}/${props.image.sprite})`,
     backgroundPosition: `${-props.image.x}px ${-props.image.y}px`,
     width: props.image.w,
     height: props.image.h
@@ -14,7 +24,7 @@ const SearchNode = (props) => {
   return (
     <a onClick={() => props.chooseValue(props.name)} styleName="search_node">
       <div style={computedStyle}></div>
-      {props.name}
+      <div>{props.name}</div>
     </a>
   );
 };

@@ -1,14 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { debounce } from 'lodash';
+import { debounce, reduce } from 'lodash';
 import _ from 'lodash/fp';
-// import cssModules from 'react-css-modules';
-import { data } from '../../../../offline/item.json';
 import SearchAutoSuggest from './SearchAutoSuggest';
 import SearchFilter from './SearchFilter';
 import './SearchNode.scss';
 import * as searchActions from '../../modules/search';
-import { FilterIcon } from '../Icons';
+
+const cMap = _.map.convert({ cap: false });
 
 @connect(({ search }) => ({ ...search }), { ...searchActions })
 export default class Search extends Component {
@@ -16,14 +15,14 @@ export default class Search extends Component {
     super(props);
     this.state = {
       value: '',
-      suggestions: [],
+      suggestions: {},
       searching: false
     };
     this.delayedSearchInData = debounce(this.searchInData, 300);
   }
 
   componentDidMount() {
-      this.props.fetchData();
+    this.props.fetchData();
   }
 
   onChange = (e) => {
@@ -31,17 +30,21 @@ export default class Search extends Component {
     this.delayedSearchInData();
   }
 
-  searchInData() {
-    const suggestions = _.flow(
-      _.map.convert({ cap: false })((item, key) => ({ id: key, ...item })),
-      _.filter(filteredItem =>
-        (this.state.value !== '' && new RegExp(this.state.value).test(filteredItem.name))))(data);
-
-    this.setState({ suggestions, searching: false });
-  }
-
   onClick = () => {
     this.setState({ value: '', suggestions: [] });
+  }
+
+  searchInData() {
+    const filters = _.pickBy(filter => !!filter, this.props.filters);
+    const searchPredicate = filteredItem => (this.state.value !== '' && new RegExp(this.state.value)
+      .test(filteredItem.name));
+    const iterateOverSuggestions = reduce(filters,
+      (total, value, key) =>
+        ({ ...total, [key]: _.pickBy(searchPredicate, this.props.data[key]) }), {});
+
+    const suggestions = _.pickBy(suggestion => !_.isEmpty(suggestion), iterateOverSuggestions);
+
+    this.setState({ suggestions, searching: false });
   }
 
   chooseValue = (name) => {
