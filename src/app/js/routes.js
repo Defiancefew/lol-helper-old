@@ -3,8 +3,8 @@ import { hashHistory, Router, Route, IndexRoute } from 'react-router';
 import App from './components/App';
 import NotFound from './components/NotFound';
 import Home from './components/Home';
-import Talents from './components/talents';
-import Search from './components/search';
+import Talents from './containers/Talent';
+import Search from './containers/Search';
 
 export const routes = (
   <div>

@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
+import cssModules from 'react-css-modules';
 import { map } from 'lodash';
 import { FilterIcon } from '../Icons';
+import styles from './Search.scss';
 
 class Filter extends Component {
   state = { opened: false };
@@ -24,7 +26,7 @@ class Filter extends Component {
             <input
               id={key}
               onClick={() => this.props.changeFilter(key)}
-              type="checkbox" defaultChecked={true}
+              type="checkbox" defaultChecked="true"
               value={this.props.filters[key]}
             />
             {key}
@@ -33,13 +35,14 @@ class Filter extends Component {
       ));
 
     return (
-      <div>
-        {filterIcon}
-        {listOfFilters}
+      <div styleName="search_filter_wrapper">
+        <div>{filterIcon}</div>
+        <div styleName="search_filter_list_wrapper">{listOfFilters}</div>
       </div>
     );
   }
 }
 
 
-export default Filter;
+export default cssModules(styles)(Filter);
+

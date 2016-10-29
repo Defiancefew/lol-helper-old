@@ -32,11 +32,9 @@ const validateNumbers = params =>
     every(v => isNumber(v) || isArray(v) || isEmpty(v))
   )(params);
 
-const requestApiData = url => promisify(request.get)(url)
-  .then(({ statusCode, headers, body }) => writeFile('./items.json', JSON.stringify(body), err => console.log(err)),
-    err => console.log(err))
+const requestApiData = url => promisify(request.get)({ url, json: true })
+  .then(({ statusCode, headers, body }) => body)
   .catch(err => console.log(err));
-
 
 // TODO Add error handler later
 // TODO Change this for multiple regions when options will be done.
@@ -291,8 +289,4 @@ class LolApi {
   }
 }
 
-module.exports = LolApi;
-
-const api = new LolApi(apiKey);
-
-// console.log(api.createQuery('staticData', { region: 'EUW', type: 'item' }));
+module.exports = new LolApi(apiKey);

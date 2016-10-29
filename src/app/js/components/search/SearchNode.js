@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import cssModules from 'react-css-modules';
 const { number, string, func } = PropTypes;
-import styles from './SearchNode.scss';
+import styles from './Search.scss';
 
 const SearchNode = (props) => {
   const imagePath = (group) => {
@@ -23,8 +23,8 @@ const SearchNode = (props) => {
 
   return (
     <a onClick={() => props.chooseValue(props.name)} styleName="search_node">
-      <div style={computedStyle}></div>
-      <div>{props.name}</div>
+      <div styleName="search_image" style={computedStyle}></div>
+      <div styleName="search_node_text">{props.name}</div>
     </a>
   );
 };

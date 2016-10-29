@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import cssModules from 'react-css-modules';
 import { isEmpty } from 'lodash';
-import * as talentActions from '../../modules/talents';
-import TalentTree from './TalentTree';
-import styles from './Talents.scss';
+import * as talentActions from '../modules/talents';
+import TalentTree from '../components/talents/TalentTree';
+import styles from '../components/talents/Talents.scss';
 
 const { string, number } = PropTypes;
 
@@ -20,7 +20,7 @@ export default class TalentPanel extends Component {
     masteries: PropTypes.object,
     pointsLeft: PropTypes.number,
     masteryState: PropTypes.arrayOf(
-      React.PropTypes.shape({
+      PropTypes.shape({
         name: string.isRequired,
         branch: string.isRequired,
         activePoints: number.isRequired

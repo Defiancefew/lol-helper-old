@@ -86,6 +86,12 @@ class MasteryFeed {
       .catch(err => console.log(err));
   }
 
+
+  /*
+   Simply iterates over mastery object keys and return new object with active prop
+   @param {object} - single mastery object
+   @returns {object}
+   */
   addActiveMastery(singleMasteryObject) {
     if (singleMasteryObject.pointsReq == 0) {
       return { ...singleMasteryObject, active: true };
@@ -215,8 +221,3 @@ class MasteryFeed {
 }
 
 module.exports = new MasteryFeed(cfg);
-
-const test = new MasteryFeed(cfg);
-
-// test.init().then(r => console.log(r));
-
