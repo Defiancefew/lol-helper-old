@@ -11,25 +11,32 @@ const PORT = 3000;
 
 app.use(webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath,
+  watchOptions: {
+    poll: true
+  },
   stats: {
     colors: true
   }
 }));
 
-app.use(webpackHotMiddleware(compiler, {
-  log: console.log,
-  path: '/__webpack_hmr'
-}));
+app.use(webpackHotMiddleware(compiler));
 
-app.get("/", function (req, res) {
-  res.sendFile(__dirname + '/index.html');
-});
+app.get('/', (req, res) => res.sendFile(`${__dirname}/index.html`));
 
-app.listen(PORT, 'localhost', err => {
+const server = app.listen(PORT, 'localhost', (err) => {
   if (err) {
     console.error(err);
     return;
   }
 
   console.log(`Listening at http://localhost:${PORT}`);
+});
+
+
+process.on('SIGTERM', () => {
+  console.log('Stopping dev server');
+  webpackDevMiddleware.close();
+  server.close(() => {
+    process.exit(0);
+  });
 });

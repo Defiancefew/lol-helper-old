@@ -1,4 +1,4 @@
-%selection_none{
+%selection_none {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -6,18 +6,18 @@
 .mastery {
 
   &_icon {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     display: inline-block;
     border: 1px solid yellow;
     position: relative;
     transition: 0.5s;
-    &:hover{
+    &:hover {
       filter: none;
     }
   }
 
-  &_icon_wrapper{
+  &_icon_wrapper {
     &:hover {
       cursor: pointer;
 
@@ -39,7 +39,7 @@
     @extend %selection_none;
     border: 1px solid yellow;
     width: 40px;
-    bottom: -1px;
+    bottom: -10px;
     left: 50%;
     background-color: black;
     color: yellow;
@@ -57,8 +57,8 @@
     padding: 10px 15px;
     font-size: 16px;
   }
-  
-  &_points_left{
+
+  &_points_left {
     @extend %selection_none;
     color: yellow;
     font-size: 24px;
@@ -71,34 +71,11 @@
     position: absolute;
   }
 
-  &_branch {
-    width: 33.3%;
-    display: inline-block;
-    border: 1px solid black;
-    padding: 0 40px;
-  }
-
-  &_branch_name {
-    @extend %selection_none;
-    float: left;
-    font-size: 26px;
-    color: white;
-    text-align: center;
-  }
-
-  &_layer {
-    display: flex;
-    justify-content: space-around;
-    margin: 10px 0;
-    &:nth-child(odd) {
-      justify-content: space-between;
-    }
-  }
-
   &_wrapper {
     max-width: 1100px;
     margin: 0 auto;
     background: url('../../../img/Masteries_background.png') no-repeat center center;
     background-size: cover;
+    overflow: hidden;
   }
 }

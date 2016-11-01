@@ -1,69 +1,70 @@
-.modal{
-  &_wrapper{
-    position: absolute;
-    margin: 0 auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 500px;
-    border: 1px solid gray;
-    text-align: center;
-  }
+.wrapper {
+  position: absolute;
+  margin: 0 auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  border: 1px solid gray;
+  text-align: center;
+}
 
-  &_inner_wrapper{
-    position: relative;
-  }
+.inner_wrapper {
+  position: relative;
+}
 
-  &_title{
-    width: 100%;
-    text-align: center;
-    color: white;
-    padding: 20px 0;
-    margin: 0 auto;
-    font-size: 24px;
-    border-bottom: 1px solid gray;
-  }
+.title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  padding: 20px 0;
+  margin: 0 auto;
+  font-size: 24px;
+  border-bottom: 1px solid gray;
+}
 
-  &_warning{
-    background-color: orange;
-  }
-  
-  &_error{
-    background-color: #c8000f;
-  }
-  
-  &_notify{
-    background-color: green;
-  }
+.warning {
+  background-color: orange;
+  composes: wrapper;
+}
 
-  &_text{
-    color: black;
-    margin: 10% 20px;
-  }
+.error {
+  background-color: #c8000f;
+  composes: wrapper;
+}
 
-  &_footer{
-    margin: 0 auto;
-    margin-bottom: 10%;
-  }
+.notify {
+  background-color: green;
+  composes: wrapper;
+}
 
-  &_button{
-    border: 0;
-    width: 30%;
-    margin: 0 10px;
-    padding: 10px 5px;
-    font-size: 18px;
-    outline: none;
-  }
+.text {
+  color: black;
+  margin: 10% 20px;
+}
 
-  &_close{
-    display: block;
-    width: 100%;
-    text-align: right;
-    float: right;
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-size: 18px;
-  }
+.footer {
+  margin: 0 auto;
+  margin-bottom: 10%;
+}
+
+.button {
+  border: 0;
+  width: 30%;
+  margin: 0 10px;
+  padding: 10px 5px;
+  font-size: 18px;
+  outline: none;
+}
+
+.close {
+  display: block;
+  width: 100%;
+  text-align: right;
+  float: right;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
 }

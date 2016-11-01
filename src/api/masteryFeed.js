@@ -9,7 +9,7 @@ import cfg from '../configs/mastery.json';
 const pRequestGet = promisify(request.get);
 
 /*
- Help script that builds mastery tree json, uses both lolwiki and official lol api.
+ Help script that builds offlineMasterydata tree json, uses both lolwiki and official lol api.
  Since official api does not provide tier values, but simple coordinates
  and lolwiki does not provide clean description data we merge official
  description with other lolwiki data.
@@ -58,8 +58,8 @@ class MasteryFeed {
 
   /*
    Main promise chain
-   @param {String} mainMasteryName - template url for loading mastery data
-   @param {String} key - used to name mastery branch once all info is fetched
+   @param {String} mainMasteryName - template url for loading offlineMasterydata data
+   @param {String} key - used to name offlineMasterydata branch once all info is fetched
    @returns {void}
    */
   check(mainMasteryPage, key, officialTree) {
@@ -88,8 +88,8 @@ class MasteryFeed {
 
 
   /*
-   Simply iterates over mastery object keys and return new object with active prop
-   @param {object} - single mastery object
+   Simply iterates over offlineMasterydata object keys and return new object with active prop
+   @param {object} - single offlineMasterydata object
    @returns {object}
    */
   addActiveMastery(singleMasteryObject) {
@@ -128,7 +128,7 @@ class MasteryFeed {
   }
 
   /*
-   Extract description, rank and tier from the mastery page
+   Extract description, rank and tier from the offlineMasterydata page
    @param {string} name
    @param {object} $ - web page with cheerio's wrapper
    @param {string} url
@@ -189,8 +189,8 @@ class MasteryFeed {
   }
 
   /*
-   Convert mastery array to object and normalize it, each key equals tier number
-   @param {Array} tree - mastery info
+   Convert offlineMasterydata array to object and normalize it, each key equals tier number
+   @param {Array} tree - offlineMasterydata info
    @returns {Object}
    */
   sortMasteryTree(tree) {

@@ -1,12 +1,14 @@
 import { promisify, resolve, reduce as pReduce } from 'bluebird';
 import request from 'request';
+import path from 'path';
+import jimp from "jimp";
 import { readFile, mkdir, writeFile } from 'fs';
 import { map, isArray } from 'lodash';
 import { uniq, flow, filter, map as fmap } from 'lodash/fp';
 import { defaultApiRegion } from '../configs/options.json';
 import { dDragon } from '../configs/apiConfig.json';
 import { fileExists, directoryExists } from './nodeHelpers';
-import path from 'path';
+
 
 const pRequestGet = promisify(request.get);
 const pReadFile = promisify(readFile);
@@ -93,11 +95,15 @@ const fetchSprites = () =>
       .then(spriteString => downloadSprite(spriteString, value))
       .catch(err => console.log(err)));
 
-// const getData = () => {
-//   return flow(map, all)(dDragon.types, type => {
-//     return pReadFile(`./src/offline/${type}.json`, 'utf8');
-//   });
-// };
+const makeBwSprites = (initialPath, savePath) => {
+  return jimp
+    .read(initialPath)
+    .then(image =>
+      image.greyscale()
+        .write(savePath)
+    )
+    .catch(err => console.log(err));
+};
 
 const getData = () =>
   pReduce(dDragon.types, (total, type) => {
@@ -109,4 +115,10 @@ const getData = () =>
 
 module.exports = {
   getData
+};
+
+const makeBiggerMasteriesSprites = () => {
+  return jimp
+    .read('../app/img/sprites/mastery/mastery0.png')
+    .then(image => image.resize(640,320).write('../app/img/sprites/mastery/mastery0scaled.png'));
 };

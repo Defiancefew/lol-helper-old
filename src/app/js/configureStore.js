@@ -16,13 +16,13 @@ export default function configureStore(initialState) {
         logger),
       DevTools.instrument(),
       persistState(
-        window.location.href.match(
+        window.location.href.match( // eslint-disable-line
           /[?&]debug_session=([^&]+)\b/
         )
       )));
   if (module.hot) {
     module.hot.accept('./modules/index', () => {
-      const nextRootReducer = require('./modules/index').default;
+      const nextRootReducer = require('./modules/index').default; // eslint-disable-line
       store.replaceReducer(nextRootReducer);
     });
   }

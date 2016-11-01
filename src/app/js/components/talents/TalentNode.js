@@ -1,15 +1,12 @@
 import React, { PropTypes } from 'react';
 import cssModules from 'react-css-modules';
-import { find } from 'lodash';
 import styles from './Talents.scss';
-
-const { string, number, bool, func } = PropTypes;
 
 const TalentNode = (props) => {
   const { name, description, rank } = props.mastery;
   const { active, mastery } = props;
   const getCurrentDescription = () => {
-    const foundMastery = find(props.masteryState, { name });
+    const foundMastery = _.find(props.masteryState, { name });
 
     if (description) {
       if (foundMastery && foundMastery.activePoints > 0) {
@@ -19,7 +16,7 @@ const TalentNode = (props) => {
     return description[0];
   };
 
-  const onWheel = (e,changedMastery) => {
+  const onWheel = (e, changedMastery) => {
     if (e.deltaY < 0) {
       props.addMastery(changedMastery);
     } else if (e.deltaY > 0) {
@@ -29,8 +26,9 @@ const TalentNode = (props) => {
 
   const computedStyles = {
     masteryIcon: {
-      backgroundImage: `url(./img/${encodeURIComponent(name)}${active ? '' : '-bw'}.png)`,
-      border: `1px solid ${active ? 'yellow' : 'gray'}`
+      backgroundImage: `url(./img/sprites/mastery/mastery0${active ? '' : 'bw'}.png)`,
+      border: `1px solid ${active ? 'yellow' : 'gray'}`,
+      backgroundPosition: `${-props.mastery.image.x}px ${-props.mastery.image.y}px`,
     },
     description: {
       top: `${props.mouseY}px`,
@@ -62,7 +60,8 @@ const TalentNode = (props) => {
       </div>
       <div
         style={computedStyles.description}
-        styleName="mastery_description">
+        styleName="mastery_description"
+      >
         <div>{decodeURIComponent(name).replace(/_+/g, ' ')}</div>
         <br />
         {getCurrentDescription()}
@@ -71,19 +70,19 @@ const TalentNode = (props) => {
   );
 };
 
-TalentNode.propTypes = {
-  addMastery: func.isRequired,
-  removeMastery: func.isRequired,
-  currentPoints: number.isRequired,
-  active: bool.isRequired,
-  mastery: PropTypes.shape({
-    name: string.isRequired,
-    rank: string.isRequired,
-    active: bool,
-    description: PropTypes.arrayOf(string).isRequired
-  }),
-  mouseX: number.isRequired,
-  mouseY: number.isRequired,
-};
+// TalentNode.propTypes = {
+//   addMastery: PropTypes.func.isRequired,
+//   removeMastery: PropTypes.func.isRequired,
+//   currentPoints: PropTypes.number.isRequired,
+//   active: PropTypes.bool.isRequired,
+//   mastery: PropTypes.shape({
+//     name: PropTypes.string.isRequired,
+//     rank: PropTypes.string.isRequired,
+//     active: PropTypes.bool,
+//     description: PropTypes.arrayOf(PropTypes.string).isRequired
+//   }),
+//   mouseX: PropTypes.number.isRequired,
+//   mouseY: PropTypes.number.isRequired,
+// };
 
 export default cssModules(styles)(TalentNode);

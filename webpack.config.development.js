@@ -8,7 +8,7 @@ module.exports = {
   debug: true,
   entry: {
     bundle: [
-      'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
+      'webpack-hot-middleware/client?reload=true&path=http://localhost:3000/__webpack_hmr',
       './src/app/js/index'
     ],
     vendor: [
@@ -21,7 +21,8 @@ module.exports = {
       'react',
       'react-dom',
       'react-redux',
-      'react-router'
+      'react-router',
+      'gsap'
     ]
   },
   output: {
@@ -42,6 +43,9 @@ module.exports = {
       name: 'vendor',
       filename: 'vendor.js',
       selectedChunks: Infinity
+    }),
+    new webpack.ProvidePlugin({
+      _ : 'lodash'
     })
   ],
   resolve: {

@@ -21,17 +21,15 @@ class Modal extends Component {
       return null;
     }
 
-    const titleClass = `modal_title modal_${this.props.type}`;
-
     return (
-      <div styleName="modal_wrapper">
-        <div styleName="modal_inner_wrapper" className="clearfix">
-          <button styleName="modal_close" onClick={this.close}>X</button>
-          <div styleName={titleClass}>{this.props.title}</div>
-          <div styleName="modal_text">{this.props.text}</div>
-          <div styleName="modal_footer">
-            <button styleName="modal_button" onClick={this.toggleModal}>Yes</button>
-            <button styleName="modal_button" onClick={this.close}>No</button>
+      <div styleName={`${this.props.type}`}>
+        <div styleName="wrapper" className="clearfix">
+          <button styleName="close" onClick={this.close}>X</button>
+          <div styleName="title">{this.props.title}</div>
+          <div styleName="text">{this.props.text}</div>
+          <div styleName="footer">
+            <button styleName="accept" onClick={this.toggleModal}>Yes</button>
+            <button styleName="decline" onClick={this.close}>No</button>
           </div>
         </div>
       </div>
@@ -46,4 +44,4 @@ Modal.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-export default cssModules(Modal, styles, { allowMultiple: true });
+export default cssModules(styles)(Modal);

@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import cssModules from 'react-css-modules';
 import { map } from 'lodash';
-import styles from './Search.scss';
+import styles from './SearchRegions.scss';
 
 @cssModules(styles)
 export default class Regions extends Component {
@@ -20,7 +20,7 @@ export default class Regions extends Component {
 
   render() {
     const selected = (
-      <div>
+      <div styleName="regions_wrapper">
         <button onClick={this.toggleList}>{this.props.selectedRegion.full}</button>
       </div>
     );
@@ -37,9 +37,9 @@ export default class Regions extends Component {
 
     if (this.state.opened) {
       return (
-        <div styleName="search_regions_wrapper">
+        <div styleName="regions_wrapper">
           {selected}
-          <ul styleName="search_regions_list">
+          <ul styleName="regions_list">
             {listOfRegions}
           </ul>
         </div>

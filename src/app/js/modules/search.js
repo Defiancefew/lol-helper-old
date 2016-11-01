@@ -1,12 +1,12 @@
 import { remote } from 'electron';
 import _ from 'lodash/fp';
 import { regions } from '../../../configs/apiConfig.json';
-// import update from 'react-addons-update';
-// import { reduce, debounce } from 'lodash';
+import { apiKey } from '../../../configs/apiKey.json';
 
 const cReduce = _.reduce.convert({ cap: false });
 
-const lolApi = remote.require('./api/lolApi');
+const ApiClass = remote.require('./api/lolApi').lolApi;
+const lolApi = new ApiClass(apiKey);
 const dragonApi = remote.require('./api/dataDragonApi');
 
 const FETCH_STATIC_DATA_SUCCESS = 'app/search/FETCH_STATIC_DATA_SUCCESS';
@@ -25,6 +25,14 @@ const SEARCH_SUMMONER_START = 'app/search/SEARCH_SUMMONER_START';
 const SEARCH_SUMMONER_ERROR = 'app/search/SEARCH_SUMMONER_ERROR';
 const SEARCH_SUMMONER_SUCCESS = 'app/search/SEARCH_SUMMONER_SUCCESS';
 
+const SEARCH_TEAM_START = 'app/search/SEARCH_TEAM_START';
+const SEARCH_TEAM_ERROR = 'app/search/SEARCH_TEAM_ERROR';
+const SEARCH_TEAM_SUCCESS = 'app/search/SEARCH_TEAM_SUCCESS';
+
+const SEARCH_SUMMONER_DATA_SUCCESS = 'app/search/SEARCH_SUMMONER_DATA_SUCCESS';
+const SEARCH_SUMMONER_DATA_START = 'app/search/SEARCH_SUMMONER_DATA_START';
+const SEARCH_SUMMONER_DATA_ERROR = 'app/search/SEARCH_SUMMONER_DATA_ERROR';
+
 export const changeFilter = filter => ({ type: CHANGE_FILTER_VALUE, payload: filter });
 
 export const fetchData = () =>
@@ -40,10 +48,11 @@ export const fetchData = () =>
       .catch(err => dispatch({ type: FETCH_STATIC_DATA_ERROR, payload: err }));
   };
 
-// written separately from searchData method since i can't assign search start in debounced method
+// written separately from searchOfflineData since
+// i can't assign search start in debounced method
 export const searchStart = () => ({ type: SEARCH_DATA_START });
 
-export const searchData = searchValue =>
+export const searchOfflineData = searchValue =>
   (dispatch, getState) => {
     const state = getState().search;
     const searchString = _.trim(searchValue);
@@ -76,7 +85,7 @@ export const searchData = searchValue =>
 
 export const cleanSuggestions = () => ({ type: CLEAN_SUGGESTIONS });
 
-export const getSummoner = (name) =>
+export const getSummoner = name =>
   (dispatch, getState) => {
     dispatch({ type: SEARCH_SUMMONER_START });
     const region = getState().search.selectedRegion.short;
@@ -87,6 +96,44 @@ export const getSummoner = (name) =>
         dispatch({ type: SEARCH_SUMMONER_SUCCESS, payload: result });
       })
       .catch(err => dispatch({ type: SEARCH_SUMMONER_ERROR, payload: err }));
+  };
+
+export const getSummonerStats = () =>
+  (dispatch, getState) => {
+    const state = getState().search;
+    const region = state.selectedRegion.short;
+    const summonerId = _.keys(state.summonerResult)
+      .map(key => state.summonerResult[key].id);
+    dispatch({ type: SEARCH_SUMMONER_DATA_START });
+
+    return Promise.all([
+      lolApi.createQuery('summoner', { region, type: 'masteries', summonerId }),
+      lolApi.createQuery('summoner', { region, type: 'runes', summonerId }),
+      lolApi.createQuery('league', { region, type: 'summoner', id: summonerId, entry: true })
+    ])
+      .then(result => dispatch({
+        type: SEARCH_SUMMONER_DATA_SUCCESS,
+        payload: {
+          masteries: result[0],
+          runes: result[1],
+          leagueEntries: result[2]
+        }
+      }))
+      .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
+  };
+
+export const getTeam = name =>
+  (dispatch, getState) => {
+    dispatch({ type: SEARCH_TEAM_START });
+    const region = getState().search.selectedRegion.short;
+
+    lolApi.createQuery('summoner', { name, region })
+      .then((listOfSummoners) => {
+        const summonerIds = _.map('id', listOfSummoners);
+        return lolApi.createQuery('team', { id: summonerIds, region, type: 'summoner' });
+      })
+      .then(result => dispatch({ type: SEARCH_TEAM_SUCCESS, payload: result }))
+      .catch(err => dispatch({ type: SEARCH_TEAM_ERROR, payload: err }));
   };
 
 export const selectRegion = region =>
@@ -104,8 +151,13 @@ const initialState = {
   searching: false,
   suggestions: {},
   regions,
-  selectedRegion: regions.EUW
+  selectedRegion: regions.EUW,
+  summonerResult: {},
+  teamResult: {},
+  summonerStats: {}
 };
+
+// TODO Add error cases for team and summoner
 
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -131,8 +183,10 @@ export default function (state = initialState, action) {
     case CLEAN_SUGGESTIONS:
       return {
         ...state,
-        suggestions: initialState.suggestions,
-        value: ''
+        suggestions: {},
+        value: '',
+        summonerResult: {},
+        teamResult: {}
       };
     case SEARCH_DATA_START:
       return {
@@ -148,6 +202,21 @@ export default function (state = initialState, action) {
         },
         value: action.payload.value,
         searching: false
+      };
+    case SEARCH_SUMMONER_SUCCESS:
+      return {
+        ...state,
+        summonerResult: action.payload
+      };
+    case SEARCH_TEAM_SUCCESS:
+      return {
+        ...state,
+        teamResult: action.payload
+      };
+    case SEARCH_SUMMONER_DATA_SUCCESS:
+      return {
+        ...state,
+        summonerStats: action.payload
       };
     default:
       return state;

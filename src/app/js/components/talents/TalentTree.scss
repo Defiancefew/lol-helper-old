@@ -1,0 +1,30 @@
+%selection_none {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.mastery {
+  &_branch {
+    width: 33.3%;
+    display: inline-block;
+    border: 1px solid black;
+    padding: 0 40px;
+  }
+
+  &_branch_name {
+    @extend %selection_none;
+    float: left;
+    font-size: 26px;
+    color: white;
+    text-align: center;
+  }
+
+  &_layer {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+    &:nth-child(odd) {
+      justify-content: space-between;
+    }
+  }
+}

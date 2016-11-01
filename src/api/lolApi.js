@@ -2,7 +2,6 @@ import { promisify } from 'bluebird';
 import { isNumber, isArray, isEmpty, isString, forEach, lowerFirst, upperFirst } from 'lodash';
 import { map, includes, flow, filter, every } from 'lodash/fp';
 import request from 'request';
-import { writeFile } from 'fs';
 
 import { apiKey } from '../configs/apiKey.json';
 import { apiUrl, regions, apiTypes, numberKeyNames } from '../configs/apiConfig.json';
@@ -112,7 +111,7 @@ class LolApi {
     return [`${baseQuery}${championId}`, champions.freeToPlay];
   }
   /*
-   Get champion mastery info
+   Get champion offlineMasterydata info
 
    @param {string} region - required
    @param {number} type -
@@ -289,4 +288,10 @@ class LolApi {
   }
 }
 
-module.exports = new LolApi(apiKey);
+exports.lolApi = LolApi;
+
+// const l = new LolApi(apiKey);
+// l.createQuery('league', { region: 'EUW', type: 'summoner', id: 23842771 })
+//   .then(r => console.log(r))
+//   .catch(err => console.log(err));
+

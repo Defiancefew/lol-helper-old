@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import cssModules from 'react-css-modules';
 const { number, string, func } = PropTypes;
-import styles from './Search.scss';
+import styles from './SearchNode.scss';
 
 const SearchNode = (props) => {
   const imagePath = (group) => {

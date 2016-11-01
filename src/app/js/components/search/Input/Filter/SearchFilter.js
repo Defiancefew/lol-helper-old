@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import cssModules from 'react-css-modules';
-import { map } from 'lodash';
-import { FilterIcon } from '../Icons';
-import styles from './Search.scss';
+import { FilterIcon } from '../../../Icons';
+import styles from './SearchFilter.scss';
 
 class Filter extends Component {
   state = { opened: false };
@@ -16,10 +15,10 @@ class Filter extends Component {
     );
 
     if (!this.state.opened) {
-      return <div>{filterIcon}</div>;
+      return <div styleName="filter_wrapper">{filterIcon}</div>;
     }
 
-    const listOfFilters = map(this.props.filters, (filter, key) =>
+    const listOfFilters = _.map(this.props.filters, (filter, key) =>
       (
         <div key={key}>
           <label htmlFor={key}>
@@ -35,13 +34,18 @@ class Filter extends Component {
       ));
 
     return (
-      <div styleName="search_filter_wrapper">
+      <div styleName="filter_wrapper">
         <div>{filterIcon}</div>
-        <div styleName="search_filter_list_wrapper">{listOfFilters}</div>
+        <div styleName="filter_list_wrapper">{listOfFilters}</div>
       </div>
     );
   }
 }
+
+Filter.propTypes = {
+  filters: PropTypes.shape({}),
+  changeFilter: PropTypes.func.isRequired
+};
 
 
 export default cssModules(styles)(Filter);

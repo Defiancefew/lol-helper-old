@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import cssModules from 'react-css-modules';
 import { isEmpty } from 'lodash';
 import * as talentActions from '../modules/talents';
-import TalentTree from '../components/talents/TalentTree';
+import Tree from '../components/talents/TalentTree';
 import styles from '../components/talents/Talents.scss';
 
 const { string, number } = PropTypes;
@@ -24,7 +24,7 @@ export default class TalentPanel extends Component {
         name: string.isRequired,
         branch: string.isRequired,
         activePoints: number.isRequired
-      }),
+      })
     )
   }
 
@@ -34,7 +34,7 @@ export default class TalentPanel extends Component {
 
   componentDidMount() {
     if (isEmpty(this.props.masteries)) {
-      this.props.loadMasteries()
+      this.props.loadMasteries();
     }
   }
 
@@ -56,7 +56,7 @@ export default class TalentPanel extends Component {
           </div>
         </div>
         <div onMouseMove={this.onMouseMove}>
-          <TalentTree {...this.state} {...this.props} />
+          <Tree {...this.state} {..._.omit(this.props, 'styles')} />
         </div>
       </div>
     );

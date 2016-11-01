@@ -1,0 +1,33 @@
+.search {
+  &_image {
+    display: inline-block;
+    float: left;
+    vertical-align: center;
+  }
+
+  &_champion {
+    background-image: url('../../../../../img/random.jpg');
+    float: left;
+    width: 48px;
+    height: 48px;
+  }
+
+  &_node {
+    border: 1px solid black;
+    display: block;
+    width: 500px;
+    height: 49px;
+    text-align: center;
+    line-height: 49px;
+    transition: 0.1s ease-in-out;
+
+    &:hover {
+      border: 1px solid orange;
+    }
+
+    &_text {
+      line-height: 48px;
+    }
+  }
+}
+
