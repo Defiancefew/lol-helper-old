@@ -1,0 +1,18 @@
+.suggest_wrapper{
+  width: 300px;
+}
+
+.cogwheel {
+  svg {
+    animation: ani 1s linear infinite;
+  }
+
+  @keyframes ani {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(90deg);
+    }
+  }
+}

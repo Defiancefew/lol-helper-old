@@ -10,7 +10,7 @@ export const isMasteryAvailable = ({ branchState, masteryState, mastery }) => {
   const { name, pointsReq, branch, rank } = mastery;
   // Return false if no points left
   if (calculatePointsLeft(branchState) < 0) {
-    // Return false if mastery is not active
+    // Return false if offlineMasterydata is not active
     return (masteryState[name] && masteryState[name].activePoints > 0);
   }
 
@@ -26,3 +26,7 @@ export const isMasteryAvailable = ({ branchState, masteryState, mastery }) => {
 
   return false;
 };
+
+export const composeStaticData = () => {
+  return reduce();
+}

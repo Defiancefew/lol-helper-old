@@ -3,25 +3,26 @@ const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'eval-source-map',
   target: 'electron-renderer',
   debug: true,
   entry: {
     bundle: [
-      'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr&reload=true',
+      'webpack-hot-middleware/client?reload=true&path=http://localhost:3000/__webpack_hmr',
       './src/app/js/index'
     ],
     vendor: [
       'redux-thunk',
+      'electron',
       'react-css-modules',
       'lodash',
-      'redux-form',
       'redux-logger',
       'redux',
       'react',
       'react-dom',
       'react-redux',
-      'react-router'
+      'react-router',
+      'gsap'
     ]
   },
   output: {
@@ -42,6 +43,9 @@ module.exports = {
       name: 'vendor',
       filename: 'vendor.js',
       selectedChunks: Infinity
+    }),
+    new webpack.ProvidePlugin({
+      _ : 'lodash'
     })
   ],
   resolve: {
@@ -53,7 +57,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['babel'],
+        loader: 'babel',
         include: path.join(__dirname, 'src')
       },
       {

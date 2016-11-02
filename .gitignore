@@ -2,7 +2,7 @@
 /.idea/
 /.code/
 /node_modules/
-/src/app/img/*.png
+/src/app/img/sprites/*.png
 /src/configs/apiKey.json
 !/src/app/img/Masteries_background.png
 /yarn.lock

@@ -2,9 +2,8 @@ import { promisify } from 'bluebird';
 import { isNumber, isArray, isEmpty, isString, forEach, lowerFirst, upperFirst } from 'lodash';
 import { map, includes, flow, filter, every } from 'lodash/fp';
 import request from 'request';
-import { writeFile } from 'fs';
 
-// import { apiKey } from '../configs/apiKey.json';
+import { apiKey } from '../configs/apiKey.json';
 import { apiUrl, regions, apiTypes, numberKeyNames } from '../configs/apiConfig.json';
 import { defaultApiRegion } from '../configs/options.json';
 
@@ -32,12 +31,9 @@ const validateNumbers = params =>
     every(v => isNumber(v) || isArray(v) || isEmpty(v))
   )(params);
 
-const requestApiData = url => promisify(request.get)(url)
-  .then(({ statusCode, headers, body }) =>
-      ({ statusCode, headers, body }),
-    err => console.log(err))
+const requestApiData = url => promisify(request.get)({ url, json: true })
+  .then(({ statusCode, headers, body }) => body)
   .catch(err => console.log(err));
-
 
 // TODO Add error handler later
 // TODO Change this for multiple regions when options will be done.
@@ -62,7 +58,7 @@ class LolApi {
   }
 
   createQuery = (name, params, testLog) => {
-    const basicUrl = `https://${defaultApiRegion}.${apiUrl}`;
+    const basicUrl = `https://${(name === 'staticData') ? 'global' : defaultApiRegion}.${apiUrl}`;
     const validParams = this[`get${upperFirst(name)}`](params);
     const apiKeyQuery = `?api_key=${this.apiKey}`;
 
@@ -115,7 +111,7 @@ class LolApi {
     return [`${baseQuery}${championId}`, champions.freeToPlay];
   }
   /*
-   Get champion mastery info
+   Get champion offlineMasterydata info
 
    @param {string} region - required
    @param {number} type -
@@ -292,4 +288,10 @@ class LolApi {
   }
 }
 
-module.exports = LolApi;
+exports.lolApi = LolApi;
+
+// const l = new LolApi(apiKey);
+// l.createQuery('league', { region: 'EUW', type: 'summoner', id: 23842771 })
+//   .then(r => console.log(r))
+//   .catch(err => console.log(err));
+

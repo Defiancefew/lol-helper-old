@@ -4,7 +4,7 @@ const NpmInstallPlugin = require('npm-install-webpack-plugin');
 const webpackTargetElectronRenderer = require('webpack-target-electron-renderer');
 
 const options = {
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   target: 'electron-main',
   node: {
     __dirname: false,

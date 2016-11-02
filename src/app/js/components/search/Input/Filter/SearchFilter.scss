@@ -1,0 +1,22 @@
+.filter {
+  &_wrapper {
+    display: inline-block;
+    width: 200px;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  &_list_wrapper {
+    position: absolute;
+    background-color: white;
+    z-index: 9999;
+    left: 40px;
+    top: -5px;
+    padding: 10px;
+    border: 1px solid black;
+  }
+
+  &_icon{
+    cursor: pointer;
+  }
+}

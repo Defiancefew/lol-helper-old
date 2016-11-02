@@ -1,7 +1,7 @@
 import { remote } from 'electron';
 import update from 'react-addons-update';
 import { calculatePointsLeft, rankPointsSum } from '../helpers';
-import testMasteries from '../../../offline/masteries.json';
+import testMasteries from '../../../offline/masteries_composed.json';
 
 const fetchMasteries = remote.require('./api/masteryFeed');
 
@@ -39,9 +39,9 @@ export const addMastery = mastery =>
     const { name, rank, branch, pointsReq } = mastery;
     const foundActiveMastery = masteryState[name];
 
-    // Block mastery adding if you don't have enough points required.
+    // Block offlineMasterydata adding if you don't have enough points required.
     // Block the tier if masteries spent on this tier is enough to go further.
-    // Block mastery adding if 30 points spent already.
+    // Block offlineMasterydata adding if 30 points spent already.
     if (
       pointsReq > branchState[branch] ||
       rankPointsSum(pointsReq, rank) <= branchState[branch] ||
@@ -52,13 +52,13 @@ export const addMastery = mastery =>
     if (foundActiveMastery) {
       // Mastery does not exceed the given rank, then we add a point to it
       if (foundActiveMastery.activePoints < rank) {
-        // Replace mastery active points property and refresh the branchState counter
+        // Replace offlineMasterydata active points property and refresh the branchState counter
         dispatch({ type: MASTERY_ADD, payload: mastery });
       }
       return;
     }
 
-    // If we click mastery for the first time, then simply add the point to the branchState counter
+    // If we click offlineMasterydata for the first time, then simply add the point to the branchState counter
     // and push it to masteryState
     dispatch({ type: MASTERY_ADD_NEW, payload: mastery });
   };
@@ -70,7 +70,7 @@ export const removeMastery = mastery =>
     const foundActiveMastery = masteryState[name];
 
     if (foundActiveMastery) {
-      // Can't reduce mastery level below zero
+      // Can't reduce offlineMasterydata level below zero
       if (foundActiveMastery.activePoints === 0) {
         return;
       }
@@ -95,7 +95,8 @@ const initialState = {
     Ferocity: 0,
     Resolve: 0
   },
-  pointsLeft: 30
+  pointsLeft: 30,
+  pointsReqArray: [0, 5, 6, 11, 12, 17]
 };
 
 export default function (state = initialState, { type, payload }) {

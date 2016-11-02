@@ -1,0 +1,13 @@
+.regions {
+  &_wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  &_list {
+    position: absolute;
+    display: block;
+    padding: 10px;
+    border: 1px solid black;
+    background-color: white;
+  }
+}

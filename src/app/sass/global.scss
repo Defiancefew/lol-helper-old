@@ -3,5 +3,16 @@
 }
 
 body {
-  overflow: hidden;
+  background-color: white;
+  overflow-x: hidden;
+}
+
+:global {
+  .clearfix {
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
 }

@@ -3,9 +3,9 @@ import { Link } from 'react-router';
 import DevTools from './DevTools';
 import appStyle from './App.scss';
 
-export default props => {
-  return (
-    <div>
+export default props => (
+  <div>
+    <nav>
       <ul>
         <li className="nav_list">
           <Link className="nav" activeClassName="nav_active" to="/">Home</Link>
@@ -13,11 +13,14 @@ export default props => {
         <li className="nav_list">
           <Link className="nav" activeClassName="nav_active" to="/talents">Talents</Link>
         </li>
+        <li className="nav_list">
+          <Link className="nav" activeClassName="nav_active" to="/search">Search</Link>
+        </li>
       </ul>
-      <div>
-        {props.children}
-      </div>
-      {(process.env.NODE_ENV === 'production') ? null : <DevTools />}
+    </nav>
+    <div>
+      {props.children}
     </div>
-  );
-};
+    {(process.env.NODE_ENV === 'production') ? null : <DevTools />}
+  </div>
+);

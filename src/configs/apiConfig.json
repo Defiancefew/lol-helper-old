@@ -1,48 +1,72 @@
 {
   "apiUrl": "api.pvp.net/api/lol/",
+  "dDragon": {
+    "url": "http://ddragon.leagueoflegends.com/",
+    "types": [
+      "champion",
+      "item",
+      "map",
+      "mastery",
+      "profileicon",
+      "rune",
+      "summoner"
+    ],
+    "versionsPath": "../offline/versions.json"
+  },
   "regions": {
-    "Brazil": {
+    "BR": {
       "short": "BR",
+      "full": "Brazil",
       "platformId": "BR1"
     },
-    "EuNordicEast": {
+    "EUNE": {
       "short": "EUNE",
+      "full": "Europe Nordic East",
       "platformId": "EUN1"
     },
-    "EuWest": {
+    "EUW": {
       "short": "EUW",
+      "full": "Europe West",
       "platformId": "EUW1"
     },
-    "Japan": {
+    "JP": {
       "short": "JP",
+      "full": "Japan",
       "platformId": "JP1"
     },
-    "Korean": {
+    "KR": {
       "short": "KR",
+      "full": "Korean",
       "platformId": "KR"
     },
-    "LatinAmericaNorth": {
+    "LAN": {
       "short": "LAN",
+      "full": "Latin America North",
       "platformId": "LA1"
     },
-    "LatinAmericaSouth": {
+    "LAS": {
       "short": "LAS",
+      "full": "Latin America South",
       "platformId": "LA2"
     },
-    "NorthAmerica": {
+    "NA": {
       "short": "NA",
+      "full": "North America",
       "platformId": "NA1"
     },
-    "Oceanic": {
+    "OCE": {
       "short": "OCE",
+      "full": "Oceanic",
       "platformId": "OC1"
     },
-    "Russian": {
+    "RU": {
       "short": "RU",
+      "full": "Russian",
       "platformId": "RU"
     },
-    "Turkish": {
+    "TR": {
       "short": "TR",
+      "full": "Turkish",
       "platformId": "TR1"
     }
   },
@@ -127,7 +151,10 @@
     },
     "team": {
       "url": "v2.4/team/",
-      "type": ["summoner", "team"]
+      "type": [
+        "summoner",
+        "team"
+      ]
     }
   },
   "numberKeyNames": [
