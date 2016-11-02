@@ -117,6 +117,7 @@ module.exports = {
   getData
 };
 
+// TODO change this to generate apropriate sprite maps
 const makeBiggerMasteriesSprites = () => {
   return jimp
     .read('../app/img/sprites/mastery/mastery0.png')

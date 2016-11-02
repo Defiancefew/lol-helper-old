@@ -6,7 +6,7 @@ import MatchNode from './SearchMatchNode';
 
 class TeamNode extends Component {
   state = {
-    historyHidden: false
+    historyHidden: true
   }
 
   renderMatchHistory() {

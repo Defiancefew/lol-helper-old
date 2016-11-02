@@ -24,7 +24,10 @@ export default class Search extends Component {
     return (
       <div>
         <SearchInput {...this.props} />
-        <SummonerResult summonerResult={this.props.summonerResult} data={this.props.data} />
+        <SummonerResult
+          summonerStats={this.props.summonerStats}
+          summonerResult={this.props.summonerResult}
+          data={this.props.data} />
         <TeamResult teamResult={this.props.teamResult} />
       </div>
     );

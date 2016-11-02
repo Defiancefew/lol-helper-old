@@ -1,6 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import cssModules from 'react-css-modules';
-const { number, string, func } = PropTypes;
 import styles from './SearchNode.scss';
 
 const SearchNode = (props) => {
@@ -31,14 +30,15 @@ const SearchNode = (props) => {
 
 SearchNode.propTypes = {
   image: PropTypes.shape({
-    sprite: string.isRequired,
-    w: number.isRequired,
-    h: number.isRequired,
-    x: number.isRequired,
-    y: number.isRequired
+    group: PropTypes.string.isRequired,
+    sprite: PropTypes.string.isRequired,
+    w: PropTypes.number.isRequired,
+    h: PropTypes.number.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
   }),
-  name: string.isRequired,
-  chooseValue: func.isRequired
+  name: PropTypes.string.isRequired,
+  chooseValue: PropTypes.func.isRequired
 
 };
 

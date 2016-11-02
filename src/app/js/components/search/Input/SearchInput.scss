@@ -8,10 +8,18 @@
   display: flex;
 }
 
+.input_search{
+  display: inline-block;
+  background: none;
+  outline: none;
+  border: 1px solid black;
+}
+
 .input_clean{
   position: relative;
   background: none;
   border: none;
+  top: 1px;
   left: -25px;
   outline: none;
 }

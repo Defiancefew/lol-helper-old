@@ -56,12 +56,10 @@ class SearchInput extends Component {
             }}
           />
           <button styleName="input_clean" onClick={this.onClick}><Cancel width="12px" height="12px" /></button>
+          <button styleName="input_search" onClick={() => this.props.getSummoner(this.props.value)}>Search</button>
           <SearchFilter filters={this.props.filters} changeFilter={this.props.changeFilter} />
         </div>
         <div>
-          {this.props.summonerResult
-            ? <button onClick={this.props.getSummonerStats}>Get Summoner stats</button>
-            : null}
           <SearchAutoSuggest
             chooseValue={this.chooseValue}
             suggestions={this.props.suggestions}

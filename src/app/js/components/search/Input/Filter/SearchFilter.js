@@ -9,6 +9,7 @@ class Filter extends Component {
   render() {
     const filterIcon = (
       <div
+        styleName="filter_icon"
         onClick={() => this.setState({ opened: !this.state.opened })}>
         <FilterIcon />
       </div>

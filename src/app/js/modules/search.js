@@ -91,9 +91,15 @@ export const getSummoner = name =>
     const region = getState().search.selectedRegion.short;
 
     lolApi.createQuery('summoner', { name, region })
-      .then((result) => {
-        console.log(result);
-        dispatch({ type: SEARCH_SUMMONER_SUCCESS, payload: result });
+      .then((summonerResult) => {
+        const summonerId = _.keys(summonerResult)
+          .map(key => summonerResult[key].id);
+
+        dispatch({ type: SEARCH_SUMMONER_SUCCESS, payload: { summonerResult, summonerId } });
+        return lolApi.createQuery('league', { region, type: 'summoner', id: summonerId, entry: true });
+      })
+      .then((leagueEntries) => {
+        dispatch({ type: SEARCH_SUMMONER_DATA_SUCCESS, payload: { leagueEntries } });
       })
       .catch(err => dispatch({ type: SEARCH_SUMMONER_ERROR, payload: err }));
   };
@@ -102,21 +108,19 @@ export const getSummonerStats = () =>
   (dispatch, getState) => {
     const state = getState().search;
     const region = state.selectedRegion.short;
-    const summonerId = _.keys(state.summonerResult)
-      .map(key => state.summonerResult[key].id);
+    const summonerId = state.search.summonerId;
+
     dispatch({ type: SEARCH_SUMMONER_DATA_START });
 
     return Promise.all([
       lolApi.createQuery('summoner', { region, type: 'masteries', summonerId }),
-      lolApi.createQuery('summoner', { region, type: 'runes', summonerId }),
-      lolApi.createQuery('league', { region, type: 'summoner', id: summonerId, entry: true })
+      lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
     ])
       .then(result => dispatch({
         type: SEARCH_SUMMONER_DATA_SUCCESS,
         payload: {
           masteries: result[0],
-          runes: result[1],
-          leagueEntries: result[2]
+          runes: result[1]
         }
       }))
       .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
@@ -154,7 +158,8 @@ const initialState = {
   selectedRegion: regions.EUW,
   summonerResult: {},
   teamResult: {},
-  summonerStats: {}
+  summonerStats: {},
+  summonerId: []
 };
 
 // TODO Add error cases for team and summoner
@@ -182,11 +187,8 @@ export default function (state = initialState, action) {
       };
     case CLEAN_SUGGESTIONS:
       return {
-        ...state,
-        suggestions: {},
-        value: '',
-        summonerResult: {},
-        teamResult: {}
+        ...initialState,
+        data: state.data
       };
     case SEARCH_DATA_START:
       return {
@@ -206,7 +208,8 @@ export default function (state = initialState, action) {
     case SEARCH_SUMMONER_SUCCESS:
       return {
         ...state,
-        summonerResult: action.payload
+        summonerResult: action.payload.summonerResult,
+        summonerId: action.payload.summonerId
       };
     case SEARCH_TEAM_SUCCESS:
       return {
@@ -216,7 +219,9 @@ export default function (state = initialState, action) {
     case SEARCH_SUMMONER_DATA_SUCCESS:
       return {
         ...state,
-        summonerStats: action.payload
+        summonerStats: {
+          ...state.summonerStats, ...action.payload
+        }
       };
     default:
       return state;
