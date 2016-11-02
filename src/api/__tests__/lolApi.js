@@ -1,5 +1,5 @@
-import LolApi from '../../src/api/lolApi';
-import { apiTypes } from '../../src/configs/apiConfig.json';
+import LolApi from './lolApi';
+import { apiTypes } from '../../configs/apiConfig.json';
 
 const mockData = {
   defaultUrl: 'https://euw.api.pvp.net/api/lol/',
@@ -59,7 +59,7 @@ describe('championMastery', () => {
       );
   });
 
-  it('should return all champions mastery score by championId', () => {
+  it('should return all champions offlineMasterydata score by championId', () => {
     expect(createQuery('championMastery', { region, summonerId, type: 'score' }, true))
       .toBe(
         `${defaultUrl}${championMastery.url}${region}/player/${summonerId}/score${apiKey}`
