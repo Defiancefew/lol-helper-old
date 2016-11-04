@@ -58,7 +58,10 @@ class LolApi {
   }
 
   createQuery = (name, params, testLog) => {
-    const basicUrl = `https://${(name === 'staticData') ? 'global' : defaultApiRegion}.${apiUrl}`;
+    const withoutApi = includes(name, ['championMastery', 'currentGame', 'featuredgame']);
+    const basicUrl = `https://${(name === 'staticData')
+      ? 'global'
+      : defaultApiRegion}.${withoutApi ? 'api.pvp.net/' : apiUrl}`;
     const validParams = this[`get${upperFirst(name)}`](params);
     const apiKeyQuery = `?api_key=${this.apiKey}`;
 
@@ -66,7 +69,7 @@ class LolApi {
       return false;
     }
 
-    if (name === 'getStatus') {
+    if (name === 'status') {
       return requestApiData(validParams);
     }
 
@@ -80,6 +83,7 @@ class LolApi {
         : `${basicUrl}${validParams}${apiKeyQuery}`;
 
       if (testLog) {
+        console.log(finalUrl);
         return finalUrl;
       }
 
@@ -111,14 +115,14 @@ class LolApi {
     return [`${baseQuery}${championId}`, champions.freeToPlay];
   }
   /*
-   Get champion offlineMasterydata info
+   Get champion mastery info
 
    @param {string} region - required
    @param {number} type -
    @param {string} summonerId - required
    @returns {string}
    */
-  getChampionMastery = ({ region, type, summonerId, championId = '' }) => {
+  getChampionMastery = ({ platformId, type, summonerId, championId = '' }) => {
     const validType = () => {
       if (championId) {
         return `champion/${championId}`;
@@ -127,7 +131,7 @@ class LolApi {
       return type;
     };
 
-    return `${championMastery.url}${region}/player/${summonerId}/${validType()}`;
+    return `${championMastery.url}${platformId}/player/${summonerId}/${validType()}`;
   }
 
   /*
@@ -289,9 +293,14 @@ class LolApi {
 }
 
 exports.lolApi = LolApi;
-
+//
 // const l = new LolApi(apiKey);
-// l.createQuery('league', { region: 'EUW', type: 'summoner', id: 23842771 })
-//   .then(r => console.log(r))
-//   .catch(err => console.log(err));
+// l.createQuery('recentGames', { region: 'EUW', summonerId: 23842771 })
+// .then(r => console.log(r))
+// .catch(err => console.log(err));
 
+// lolApi.createQuery('recentGames', { region, summonerId })
+//   .then((result) => {
+//     dispatch({ type: SEARCH_SUMMONER_RECENT_SUCCESS, payload: result });
+//   })
+//   .catch(err => dispatch({ type: SEARCH_SUMMONER_RECENT_ERROR, payload: err }));

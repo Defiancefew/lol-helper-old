@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import cssModules from 'react-css-modules';
+import { Link } from 'react-router';
 import styles from './SearchSummonerResult.scss';
 
 const SummonerResult = (props) => {
@@ -19,7 +20,7 @@ const SummonerResult = (props) => {
     };
 
     const renderStats = () => {
-      if (!_.isEmpty(summonerStats)) {
+      if (!_.isEmpty(summonerStats) && summonerStats.leagueEntries[summoner.id]) {
         const {
           division,
           leaguePoints,
@@ -48,10 +49,12 @@ const SummonerResult = (props) => {
     };
 
     return (
-      <div styleName="summoner_wrapper" key={summoner.id}>
-        <div styleName="summoner_icon" style={computedStyle} />
-        <div>{summoner.summonerLevel} - {summoner.name} {renderStats()}</div>
-      </div>
+      <Link style={{textDecoration: 'none', color: 'black'}} key={summoner.id} to={`summoner/${summoner.id}`}>
+        <div styleName="summoner_wrapper" >
+          <div styleName="summoner_icon" style={computedStyle} />
+          <div>{summoner.summonerLevel} - {summoner.name} {renderStats()}</div>
+        </div>
+      </Link>
     );
   });
 

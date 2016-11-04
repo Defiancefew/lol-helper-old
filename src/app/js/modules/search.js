@@ -33,6 +33,10 @@ const SEARCH_SUMMONER_DATA_SUCCESS = 'app/search/SEARCH_SUMMONER_DATA_SUCCESS';
 const SEARCH_SUMMONER_DATA_START = 'app/search/SEARCH_SUMMONER_DATA_START';
 const SEARCH_SUMMONER_DATA_ERROR = 'app/search/SEARCH_SUMMONER_DATA_ERROR';
 
+const SEARCH_SUMMONER_RECENT_START = 'app/search/SEARCH_SUMMONER_RECENT_START';
+const SEARCH_SUMMONER_RECENT_SUCCESS = 'app/search/SEARCH_SUMMONER_RECENT_SUCCESS';
+const SEARCH_SUMMONER_RECENT_ERROR = 'app/search/SEARCH_SUMMONER_RECENT_ERROR';
+
 export const changeFilter = filter => ({ type: CHANGE_FILTER_VALUE, payload: filter });
 
 export const fetchData = () =>
@@ -143,6 +147,34 @@ export const getTeam = name =>
 export const selectRegion = region =>
   ({ type: SEARCH_REGION_CHANGED, payload: region });
 
+export const searchChampions = summonerId =>
+  (dispatch, getState) => {
+    const platformId = getState().search.selectedRegion.platformId;
+    dispatch({ type: SEARCH_SUMMONER_DATA_START });
+
+    lolApi.createQuery('championMastery', { platformId, type: 'topchampions', summonerId })
+      .then((result) => {
+        dispatch({
+          type: SEARCH_SUMMONER_DATA_SUCCESS,
+          payload: { mostPlayed: { [summonerId]: result } }
+        });
+      })
+      .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
+  };
+
+export const searchRecentGames = id =>
+  (dispatch, getState) => {
+    const region = getState().search.selectedRegion.short;
+    dispatch({ type: SEARCH_SUMMONER_RECENT_START });
+    const summonerId = parseInt(id, 10);
+
+    lolApi.createQuery('recentGames', { region, summonerId })
+      .then((result) => {
+        dispatch({ type: SEARCH_SUMMONER_RECENT_SUCCESS, payload: result });
+      })
+      .catch(err => dispatch({ type: SEARCH_SUMMONER_RECENT_ERROR, payload: err }));
+  };
+
 const initialState = {
   filters: {
     champion: true,
@@ -158,7 +190,12 @@ const initialState = {
   selectedRegion: regions.EUW,
   summonerResult: {},
   teamResult: {},
-  summonerStats: {},
+  summonerStats: {
+    leagueEntries: {},
+    mostPlayed: {},
+    runes: {},
+    masteries: {}
+  },
   summonerId: []
 };
 
@@ -220,9 +257,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         summonerStats: {
-          ...state.summonerStats, ...action.payload
+          ...state.summonerStats,
+          ...action.payload
         }
       };
+    case SEARCH_SUMMONER_RECENT_SUCCESS:
+      return {
+        ...state,
+        summonerRecent: action.payload
+      }
     default:
       return state;
   }

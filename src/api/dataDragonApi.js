@@ -1,9 +1,9 @@
 import { promisify, resolve, reduce as pReduce } from 'bluebird';
 import request from 'request';
 import path from 'path';
-import jimp from "jimp";
+import jimp from 'jimp';
 import { readFile, mkdir, writeFile } from 'fs';
-import { map, isArray } from 'lodash';
+import { map, isArray, reduce } from 'lodash';
 import { uniq, flow, filter, map as fmap } from 'lodash/fp';
 import { defaultApiRegion } from '../configs/options.json';
 import { dDragon } from '../configs/apiConfig.json';
@@ -109,9 +109,25 @@ const getData = () =>
   pReduce(dDragon.types, (total, type) => {
     return pReadFile(`./src/offline/${type}.json`, 'utf8')
       .then(content => {
+        if(type === 'champShortMap'){
+          return {...total, [type]: JSON.parse(content)};
+        }
+
         return { ...total, [type]: JSON.parse(content).data };
       });
   }, {}).then(object => resolve(object));
+
+const generateChampionShortMap = () => {
+  return pReadFile('../offline/champion.json', 'utf8')
+    .then((content) => {
+      const data = JSON.parse(content).data;
+      const shortMap = reduce(data, (total, champion, key) =>
+        ({ ...total, [champion.key]: key }), {});
+
+      return writeFile('../offline/champShortMap.json', JSON.stringify(shortMap), err => console.log(err));
+    })
+    .catch(err => console.log(err));
+};
 
 module.exports = {
   getData
@@ -121,5 +137,5 @@ module.exports = {
 const makeBiggerMasteriesSprites = () => {
   return jimp
     .read('../app/img/sprites/mastery/mastery0.png')
-    .then(image => image.resize(640,320).write('../app/img/sprites/mastery/mastery0scaled.png'));
+    .then(image => image.resize(640, 320).write('../app/img/sprites/mastery/mastery0scaled.png'));
 };

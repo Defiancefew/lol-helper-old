@@ -1,7 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import { Link } from 'react-router';
 
-const notFound = (props) => (
-  <div>Sorry, page not found</div>
+const notFound = () => (
+  <div>Sorry, page not found
+    <Link to="/">Go home</Link>
+  </div>
 );
 
 export default notFound;

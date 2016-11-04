@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SummonerResult from '../components/search/Summoner/SearchSummonerResult';
 import SearchInput from '../components/search/Input/SearchInput';
@@ -6,7 +6,7 @@ import TeamResult from '../components/search/Team/SearchTeamResult';
 import * as searchActions from '../modules/search';
 
 @connect(({ search }) => ({ ...search }), { ...searchActions })
-export default class Search extends Component {
+export default class Search extends PureComponent {
   static propTypes = {
     fetchData: PropTypes.func,
     teamResult: PropTypes.shape({}),

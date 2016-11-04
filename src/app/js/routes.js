@@ -5,6 +5,10 @@ import NotFound from './components/NotFound';
 import Home from './components/Home';
 import Talents from './containers/Talent';
 import Search from './containers/Search';
+import Summoner from './containers/Summoner';
+import Masteries from './components/summoner/Masteries';
+import Runes  from './components/summoner/Runes';
+import Match from './components/summoner/Match';
 
 export const routes = (
   <div>
@@ -12,6 +16,11 @@ export const routes = (
       <IndexRoute component={Home} />
       <Route path="talents" component={Talents} />
       <Route path="search" component={Search} />
+      <Route path="summoner/:summonerId" component={Summoner}>
+        <Route path="masteries" component={Masteries} />
+        <Route path="runes" component={Runes} />
+        <Route path="match" component={Match} />
+      </Route>
     </Route>
     <Route path="*" component={NotFound} />
   </div>

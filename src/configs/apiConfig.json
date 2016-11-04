@@ -9,7 +9,8 @@
       "mastery",
       "profileicon",
       "rune",
-      "summoner"
+      "summoner",
+      "champShortMap"
     ],
     "versionsPath": "../offline/versions.json"
   },
