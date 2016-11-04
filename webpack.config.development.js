@@ -1,73 +1,25 @@
-const path = require('path');
-const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
+import path from 'path';
+import webpack from 'webpack';
+import merge from 'webpack-merge';
+import validate from 'webpack-validator';
+import baseConfig from './webpack.config.base';
 
-module.exports = {
-  devtool: 'eval-source-map',
+const port = process.env.PORT || 3000;
+
+export default validate(merge(baseConfig, {
   target: 'electron-renderer',
   debug: true,
-  entry: {
-    bundle: [
-      'webpack-hot-middleware/client?reload=true&path=http://localhost:3000/__webpack_hmr',
-      './src/app/js/index'
-    ],
-    vendor: [
-      'redux-thunk',
-      'electron',
-      'react-css-modules',
-      'lodash',
-      'redux-logger',
-      'redux',
-      'react',
-      'react-dom',
-      'react-redux',
-      'react-router',
-      'gsap'
-    ]
-  },
-  output: {
-    path: path.join(__dirname, 'dist'),
-    publicPath: 'http://localhost:3000/dist/',
-    filename: '[name].js'
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-      __DEV__: true,
-      'process.env': {
-        NODE_ENV: JSON.stringify('development')
-      }
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'vendor.js',
-      selectedChunks: Infinity
-    }),
-    new webpack.ProvidePlugin({
-      _ : 'lodash'
-    })
+  devtool: 'cheap-module-eval-source-map',
+  entry: [
+    `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+    'babel-polyfill',
+    './src/app/js/index'
   ],
-  resolve: {
-    root: path.resolve(__dirname, 'src/app/js'),
-    modulesDirectories: ['node_modules'],
-    extensions: ['', '.js', '.jsx']
+  output: {
+    publicPath: `http://localhost:${port}/dist/`
   },
   module: {
     loaders: [
-      {
-        test: /\.js$/,
-        loader: 'babel',
-        include: path.join(__dirname, 'src')
-      },
-      {
-        test: /\.css$/,
-        loaders: [
-          'style?sourceMap',
-          'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
-        ],
-        include: path.join(__dirname, 'src')
-      },
       {
         test: /\.scss$/,
         loaders: [
@@ -77,21 +29,6 @@ module.exports = {
           'sass?outputStyle=expanded&sourceMap'
         ],
         include: path.join(__dirname, 'src')
-      },
-      {
-        test: /\.sass$/,
-        exclude: /node_modules/,
-        loaders: [
-          'style',
-          'css?modules&sourceMap&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url?sourceMap',
-          'sass?indentedSyntax&sourceMap'
-        ],
-        include: path.join(__dirname, 'src')
-      },
-      {
-        test: /\.json$/,
-        loader: 'json'
       },
       {
         test: /\.woff(\?.*)?$/,
@@ -122,5 +59,22 @@ module.exports = {
         loader: 'url?limit=8192'
       }
     ]
-  }
-};
+  },
+  plugins: [
+    // https://webpack.github.io/docs/hot-module-replacement-with-webpack.html
+    new webpack.HotModuleReplacementPlugin(),
+
+    // “If you are using the CLI, the webpack process will not exit with an
+    // error code by enabling this plugin.”
+    // https://github.com/webpack/docs/wiki/list-of-plugins#noerrorsplugin
+    new webpack.NoErrorsPlugin(),
+
+    // NODE_ENV should be production so that modules do not perform certain development checks
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    }),
+    new webpack.ProvidePlugin({
+      _ : 'lodash'
+    })
+  ]
+}));
