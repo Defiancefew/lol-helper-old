@@ -1,13 +1,36 @@
-.regions {
-  &_wrapper {
-    position: relative;
-    display: inline-block;
-  }
-  &_list {
-    position: absolute;
-    display: block;
-    padding: 10px;
-    border: 1px solid black;
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.button{
+  display: inline-block;
+  background: none;
+  color: white;
+  font-size: 26px;
+  outline: none;
+  border: 2px solid white;
+  padding: 5px 10px;
+  transition: 0.25s;
+  &:hover{
     background-color: white;
+    color: black;
+  }
+}
+
+.list {
+  position: absolute;
+  display: block;
+  color: black;
+  padding: 10px;
+  border: 1px solid black;
+  background-color: white;
+}
+
+.region{
+  cursor: pointer;
+  white-space: nowrap;
+  &:hover{
+    text-decoration: underline;
   }
 }

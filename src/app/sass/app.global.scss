@@ -1,0 +1,49 @@
+@import "mixins.global";
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+
+li{
+  list-style-type: none;
+}
+
+body {
+  background: url(../img/background2.jpg) no-repeat;
+  background-size: cover;
+  color: white;
+  font-family: sans-serif;
+  @include font-face(OpenSansRegular, '../fonts/OpenSansRegular', null, null, eot woff ttf);
+  overflow-x: hidden;
+}
+
+.clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.nav_active {
+  font-size: 24px;
+  color: orange;
+}
+
+.nav {
+  text-decoration: none;
+  transition: 0.5s ease-in-out;
+  font-size:24px;
+  color: orange;
+
+  &:hover{
+    color: white;
+  }
+}
+
+.nav_list {
+  list-style-type: none;
+  display: inline-block;
+  margin-right: 20px;
+}

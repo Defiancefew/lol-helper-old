@@ -2,8 +2,11 @@
   size: 128px;
   position: relative;
   display: inline-block;
-  border: 2px solid black;
   vertical-align: top;
+}
+
+.portraits_wrapper{
+  display: inline-block;
 }
 
 .summoner_level{

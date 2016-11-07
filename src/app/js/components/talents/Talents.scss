@@ -4,7 +4,6 @@
 }
 
 .mastery {
-
   &_icon {
     width: 48px;
     height: 48px;
@@ -68,7 +67,7 @@
   &_description {
     @extend %selection_none;
     display: none;
-    position: absolute;
+    position: fixed;
   }
 
   &_wrapper {

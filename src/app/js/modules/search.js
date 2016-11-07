@@ -108,7 +108,7 @@ export const getSummoner = name =>
       .catch(err => dispatch({ type: SEARCH_SUMMONER_ERROR, payload: err }));
   };
 
-export const getSummonerStats = () =>
+export const fetchSummonerRunes = () =>
   (dispatch, getState) => {
     const state = getState().search;
     const region = state.selectedRegion.short;
@@ -116,19 +116,51 @@ export const getSummonerStats = () =>
 
     dispatch({ type: SEARCH_SUMMONER_DATA_START });
 
-    return Promise.all([
-      lolApi.createQuery('summoner', { region, type: 'masteries', summonerId }),
-      lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
-    ])
+    return lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
       .then(result => dispatch({
         type: SEARCH_SUMMONER_DATA_SUCCESS,
-        payload: {
-          masteries: result[0],
-          runes: result[1]
-        }
+        payload: {runes: result}
       }))
       .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
   };
+
+export const fetchSummonerMasteries = () =>
+  (dispatch, getState) => {
+    const state = getState().search;
+    const region = state.selectedRegion.short;
+    const summonerId = state.search.summonerId;
+
+    dispatch({ type: SEARCH_SUMMONER_DATA_START });
+
+    return lolApi.createQuery('summoner', { region, type: 'masteries', summonerId })
+      .then(result => dispatch({
+        type: SEARCH_SUMMONER_DATA_SUCCESS,
+        payload: {masteries: result}
+      }))
+      .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
+  };
+
+// export const getSummonerStats = () =>
+//   (dispatch, getState) => {
+//     const state = getState().search;
+//     const region = state.selectedRegion.short;
+//     const summonerId = state.search.summonerId;
+//
+//     dispatch({ type: SEARCH_SUMMONER_DATA_START });
+//
+//     return Promise.all([
+//       lolApi.createQuery('summoner', { region, type: 'masteries', summonerId }),
+//       lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
+//     ])
+//       .then(result => dispatch({
+//         type: SEARCH_SUMMONER_DATA_SUCCESS,
+//         payload: {
+//           masteries: result[0],
+//           runes: result[1]
+//         }
+//       }))
+//       .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
+//   };
 
 export const getTeam = name =>
   (dispatch, getState) => {
@@ -174,6 +206,8 @@ export const searchRecentGames = id =>
       })
       .catch(err => dispatch({ type: SEARCH_SUMMONER_RECENT_ERROR, payload: err }));
   };
+
+// export const searchSummonerRunes = id =>
 
 const initialState = {
   filters: {

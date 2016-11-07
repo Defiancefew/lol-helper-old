@@ -1,3 +1,3 @@
 import React, { Component } from 'react';
 
-export default () => (<div>This is home component</div>);
+export default () => (<div>This is home component test</div>);

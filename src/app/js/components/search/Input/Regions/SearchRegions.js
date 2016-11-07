@@ -20,13 +20,14 @@ export default class Regions extends Component {
 
   render() {
     const selected = (
-      <div styleName="regions_wrapper">
-        <button onClick={this.toggleList}>{this.props.selectedRegion.full}</button>
+      <div styleName="wrapper">
+        <button styleName="button" onClick={this.toggleList}>{this.props.selectedRegion.full}</button>
       </div>
     );
     const listOfRegions = map(this.props.regions, (region) => {
       return (
         <li
+          styleName="region"
           key={region.short}
           onClick={() => this.props.selectRegion(region)}
         >
@@ -37,9 +38,9 @@ export default class Regions extends Component {
 
     if (this.state.opened) {
       return (
-        <div styleName="regions_wrapper">
+        <div styleName="wrapper">
           {selected}
-          <ul styleName="regions_list">
+          <ul styleName="list">
             {listOfRegions}
           </ul>
         </div>

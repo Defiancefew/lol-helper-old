@@ -1,7 +1,11 @@
 .input_type{
   width: 300px;
   vertical-align: middle;
-
+  background-color: black;
+  outline: none;
+  color: white;
+  font-size: 26px;
+  border: 1px solid white;
 }
 
 .input_wrapper{
@@ -11,8 +15,16 @@
 .input_search{
   display: inline-block;
   background: none;
+  color: white;
+  font-size: 26px;
   outline: none;
-  border: 1px solid black;
+  border: 2px solid white;
+  padding: 5px 10px;
+  transition: 0.25s;
+  &:hover{
+    background-color: white;
+    color: black;
+  }
 }
 
 .input_clean{

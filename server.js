@@ -3,7 +3,6 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import { spawn } from 'child_process';
-import path from 'path';
 
 import config from './webpack.config.development';
 
@@ -11,12 +10,16 @@ const argv = require('minimist')(process.argv.slice(2));
 
 const app = express();
 const compiler = webpack(config);
-const PORT  = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 const wdm = webpackDevMiddleware(compiler, {
+  watchOptions: {
+    poll: true
+  },
   publicPath: config.output.publicPath,
   stats: {
-    colors: true
+    colors: true,
+    chunks: false
   }
 });
 

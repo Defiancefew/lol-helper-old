@@ -1,23 +1,23 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import cssModules from 'react-css-modules';
 import * as searchActions from '../modules/search';
 import SummonerPortrait from '../components/summoner/Portrait/SummonerPortrait';
 import SummonerStatsPortrait from '../components/summoner/Portrait/SummonerStatsPortrait';
 import MostPlayedChampions from '../components/summoner/Portrait/SummonerMostPlayedChampions';
+import Nav from '../components/summoner/Nav';
 import styles from './Summoner.scss';
 
 @connect(({ search, summoner }) => ({ search, summoner }), { ...searchActions })
 @cssModules(styles)
 export default class SummonerPanel extends PureComponent {
   componentWillMount() {
-    this.props.searchChampions(parseFloat(this.props.params.summonerId, 10));
+    this.props.searchChampions(_.toNumber(this.props.params.summonerId));
   }
 
   render() {
     const { summonerResult, summonerStats, data } = this.props.search;
-    const routerId = parseInt(this.props.params.summonerId, 10);
+    const routerId = _.toNumber(this.props.params.summonerId);
     const singleSummoner = _.find(summonerResult, ['id', routerId]);
 
     if (!singleSummoner) {
@@ -30,34 +30,25 @@ export default class SummonerPanel extends PureComponent {
       );
     });
 
+
     return (
-      <div>
-        <SummonerPortrait
-          summonerLevel={singleSummoner.summonerLevel}
-          profileIconId={singleSummoner.profileIconId}
-        />
-        {statsPortraits}
-        <div styleName="summoner_name">{singleSummoner.name}</div>
-        <MostPlayedChampions
-          data={data}
-          mostPlayed={summonerStats.mostPlayed[routerId]}
-        />
-        <div>
-          <ul>
-            <li className="nav_list">
-              <Link className="nav" activeClassName="nav_active" to={`summoner/${routerId}/match`}>Match</Link>
-            </li>
-            <li className="nav_list">
-              <Link className="nav" activeClassName="nav_active" to={`summoner/${routerId}/runes`}>Runes</Link>
-            </li>
-            <li className="nav_list">
-              <Link className="nav" activeClassName="nav_active" to={`summoner/${routerId}/masteries`}>Masteries</Link>
-            </li>
-          </ul>
+      <div styleName="summoner_page_wrapper">
+        <div styleName="top_profile_wrapper">
+          <div styleName="portraits_wrapper">
+            <SummonerPortrait
+              summonerLevel={singleSummoner.summonerLevel}
+              profileIconId={singleSummoner.profileIconId}
+            />
+            <MostPlayedChampions
+              data={data}
+              mostPlayed={summonerStats.mostPlayed[routerId]}
+            />
+          </div>
+          {statsPortraits}
+          <div styleName="summoner_name">{singleSummoner.name}</div>
         </div>
-        <div>
-          {this.props.children && React.cloneElement(this.props.children, this.props)}
-        </div>
+        <Nav routerId={routerId} />
+        {this.props.children && React.cloneElement(this.props.children, this.props)}
       </div>
     );
   }

@@ -13,7 +13,6 @@ class SearchInput extends Component {
   static propTypes = {
     selectRegion: PropTypes.func.isRequired,
     changeFilter: PropTypes.func.isRequired,
-    getSummonerStats: PropTypes.func.isRequired,
     searchOfflineData: PropTypes.func.isRequired,
     searchStart: PropTypes.func,
     cleanSuggestions: PropTypes.func,
@@ -48,6 +47,7 @@ class SearchInput extends Component {
             selectedRegion={this.props.selectedRegion}
           />
           <input
+            placeholder="Search here..."
             styleName="input_type"
             onChange={this.onChange}
             type="text"

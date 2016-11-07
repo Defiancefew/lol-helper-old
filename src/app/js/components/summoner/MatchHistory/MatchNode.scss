@@ -1,0 +1,48 @@
+.stats{
+  &_wrapper{
+    width: 400px;
+    display: inline-block;
+    height: 48px;
+  }
+
+}
+
+.champion_icons_wrapper{
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.location_wrapper{
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 10px;
+  width: 140px;
+  vertical-align: middle;
+}
+
+.stats_kills{
+  font-size: 18px;
+  text-align: center;
+  line-height: 48px;
+  display: inline-block;
+  width: 130px;
+}
+
+.match_node_wrapper{
+  vertical-align: middle;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  cursor: pointer;
+  &:hover{
+    outline: 1px solid orange;
+  }
+}
+
+.stats_win{
+  font-size: 22px;
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+}

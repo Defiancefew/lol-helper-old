@@ -13,6 +13,7 @@ export default validate(merge(baseConfig, {
   entry: [
     `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
     'babel-polyfill',
+    'react-hot-loader/patch',
     './src/app/js/index'
   ],
   output: {
@@ -21,12 +22,20 @@ export default validate(merge(baseConfig, {
   module: {
     loaders: [
       {
-        test: /\.scss$/,
+        test: /\.global\.scss$/,
+        loaders: [
+          'style',
+          'css',
+          'sass'
+        ]
+      },
+      {
+        test: /^((?!\.global).)*\.scss$/,
         loaders: [
           'style',
           'css?modules&sourceMap&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-          'resolve-url?sourceMap',
-          'sass?outputStyle=expanded&sourceMap'
+          'resolve-url',
+          'sass?sourceMap'
         ],
         include: path.join(__dirname, 'src')
       },
@@ -61,6 +70,7 @@ export default validate(merge(baseConfig, {
     ]
   },
   plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
     // https://webpack.github.io/docs/hot-module-replacement-with-webpack.html
     new webpack.HotModuleReplacementPlugin(),
 
