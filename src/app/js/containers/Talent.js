@@ -51,9 +51,9 @@ export default class TalentPanel extends Component {
       <div styleName="mastery_wrapper">
         <div>
           <button styleName="mastery_return_button" onClick={this.onClick}>Return points</button>
-          <div styleName="mastery_points_left">Points left :
+          <span styleName="mastery_points_left">Points left :
             {this.props.pointsLeft}
-          </div>
+          </span>
         </div>
         <div onMouseMove={this.onMouseMove}>
           <Tree {...this.state} {..._.omit(this.props, 'styles')} />

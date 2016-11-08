@@ -11,7 +11,7 @@ class Filter extends Component {
       <div
         styleName="filter_icon"
         onClick={() => this.setState({ opened: !this.state.opened })}>
-        <FilterIcon />
+        <FilterIcon style={{fill: 'white'}} />
       </div>
     );
 
@@ -25,6 +25,7 @@ class Filter extends Component {
           <label htmlFor={key}>
             <input
               id={key}
+              styleName="filter_checkbox"
               onClick={() => this.props.changeFilter(key)}
               type="checkbox" defaultChecked="true"
               value={this.props.filters[key]}

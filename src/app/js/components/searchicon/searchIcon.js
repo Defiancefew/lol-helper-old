@@ -61,7 +61,9 @@ class SearchIcon extends Component {
       return <div style={emptyItem} />;
     }
 
-    const { nodeInfo} = this.props;
+    const isProfileIcon = () => (this.props.nodeInfo.image.group === 'profileicon');
+
+    const { nodeInfo } = this.props;
     const { image, description } = nodeInfo;
 
     const iconStyle = {
@@ -72,6 +74,7 @@ class SearchIcon extends Component {
     };
 
     const descriptionStyle = {
+      opacity: isProfileIcon() ? '0' : '1',
       top: `${this.state.mouseY}px`,
       left: `${this.state.mouseX + 20}px`
     };
@@ -85,7 +88,7 @@ class SearchIcon extends Component {
             styleName="description"
             style={descriptionStyle}
           >
-            {this.descriptionText(image.group, nodeInfo)}
+            { this.descriptionText(image.group, nodeInfo)}
           </div>
           {this.props.level ? <div styleName="level">{this.props.level}</div> : null}
         </div>

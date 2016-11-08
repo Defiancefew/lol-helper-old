@@ -1,6 +1,5 @@
 .stats{
   &_wrapper{
-    width: 400px;
     display: inline-block;
     height: 48px;
   }
@@ -15,7 +14,7 @@
 .location_wrapper{
   display: inline-block;
   white-space: nowrap;
-  margin-right: 10px;
+  margin: 0 10px;
   width: 140px;
   vertical-align: middle;
 }

@@ -1,14 +1,19 @@
 .filter {
   &_wrapper {
     display: inline-block;
-    width: 200px;
     position: relative;
+    white-space: nowrap;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  &_checkbox{
     vertical-align: middle;
   }
 
   &_list_wrapper {
     position: absolute;
-    background-color: white;
+    background-color: rgba(0,0,0,0.7);
     z-index: 9999;
     left: 40px;
     top: -5px;

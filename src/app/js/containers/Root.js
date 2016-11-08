@@ -4,7 +4,7 @@ import { Router } from 'react-router';
 import routes from '../routes';
 import '../../sass/app.global.scss';
 
-class App extends Component {
+class Root extends Component {
   render() {
     const { store, history } = this.props;
 
@@ -16,4 +16,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Root;

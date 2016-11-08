@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import cssModules from 'react-css-modules';
 import { Link } from 'react-router';
+import SearchIcon from '../../searchicon/searchIcon';
 import styles from './SearchSummonerResult.scss';
 
 const SummonerResult = (props) => {
@@ -11,13 +12,14 @@ const SummonerResult = (props) => {
   }
 
   const listOfSummoners = _.map(summonerResult, (summoner) => {
-    const image = props.data.profileicon[summoner.profileIconId].image;
-    const computedStyle = {
-      backgroundImage: `url(./img/sprites/${image.group}/${image.sprite})`,
-      backgroundPosition: `${-image.x}px ${-image.y}px`,
-      width: image.w,
-      height: image.h
-    };
+    const nodeInfo = props.data.profileicon[summoner.profileIconId];
+    // const image = props.data.profileicon[summoner.profileIconId].image;
+    // const computedStyle = {
+    //   backgroundImage: `url(./img/sprites/${image.group}/${image.sprite})`,
+    //   backgroundPosition: `${-image.x}px ${-image.y}px`,
+    //   width: image.w,
+    //   height: image.h
+    // };
 
     const renderStats = () => {
       if (!_.isEmpty(summonerStats) && summonerStats.leagueEntries[summoner.id]) {
@@ -49,17 +51,19 @@ const SummonerResult = (props) => {
     };
 
     return (
-      <Link style={{textDecoration: 'none', color: 'black'}} key={summoner.id} to={`summoner/${summoner.id}`}>
-        <div styleName="summoner_wrapper" >
-          <div styleName="summoner_icon" style={computedStyle} />
-          <div>{summoner.summonerLevel} - {summoner.name} {renderStats()}</div>
+      <Link style={{ textDecoration: 'none' }} key={summoner.id} to={`summoner/${summoner.id}`}>
+        <div styleName="container">
+          <span style={{ verticalAlign: 'top', display: 'inline-block', margin: '0 20px' }}>
+            <SearchIcon nodeInfo={nodeInfo} />
+          </span>
+          {summoner.summonerLevel} {summoner.name} {renderStats()}
         </div>
       </Link>
     );
   });
 
   return (
-    <div>
+    <div >
       {listOfSummoners}
     </div>
   );

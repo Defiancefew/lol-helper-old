@@ -1,5 +1,10 @@
 .suggest_wrapper{
-  width: 300px;
+  display: inline-block;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.item{
+  cursor: pointer;
 }
 
 .cogwheel {

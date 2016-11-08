@@ -6,20 +6,24 @@ import styles from './Match.scss';
 class MatchList extends Component {
 
   componentDidMount() {
-    if (_.isEmpty(this.props.search.summonerRecent)) {
-      this.props.searchRecentGames(this.props.params.summonerId);
+    const { search, params, searchRecentGames } = this.props;
+
+    if (_.isEmpty(search.summonerRecent[params.summonerId])) {
+      searchRecentGames(params.summonerId);
     }
   }
 
   render() {
+    const { summonerId } = this.props.params;
+    const { summonerRecent, data } = this.props.search;
     // Team ID 100 is blue team. Team ID 200 is purple team.
-    if (_.isEmpty(this.props.search.summonerRecent)) {
+    if (_.isEmpty(summonerRecent[summonerId])) {
       return null;
     }
 
-    const { games } = this.props.search.summonerRecent;
+    const { games } = summonerRecent[summonerId];
     const renderMatchList = _.map(games, (match, key) =>
-      <MatchNode key={match.gameId} data={this.props.search.data} matchInfo={match} />
+      <MatchNode key={match.gameId} data={data} matchInfo={match} />
     );
 
     return (

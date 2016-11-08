@@ -119,7 +119,7 @@ export const fetchSummonerRunes = () =>
     return lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
       .then(result => dispatch({
         type: SEARCH_SUMMONER_DATA_SUCCESS,
-        payload: {runes: result}
+        payload: { runes: result }
       }))
       .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
   };
@@ -135,7 +135,7 @@ export const fetchSummonerMasteries = () =>
     return lolApi.createQuery('summoner', { region, type: 'masteries', summonerId })
       .then(result => dispatch({
         type: SEARCH_SUMMONER_DATA_SUCCESS,
-        payload: {masteries: result}
+        payload: { masteries: result }
       }))
       .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
   };
@@ -230,6 +230,7 @@ const initialState = {
     runes: {},
     masteries: {}
   },
+  summonerRecent: {},
   summonerId: []
 };
 
@@ -298,8 +299,8 @@ export default function (state = initialState, action) {
     case SEARCH_SUMMONER_RECENT_SUCCESS:
       return {
         ...state,
-        summonerRecent: action.payload
-      }
+        summonerRecent: { ...state.summonerRecent, [action.payload.summonerId]: action.payload }
+      };
     default:
       return state;
   }

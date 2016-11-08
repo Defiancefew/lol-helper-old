@@ -33,21 +33,25 @@ export default class SummonerPanel extends PureComponent {
 
     return (
       <div styleName="summoner_page_wrapper">
-        <div styleName="top_profile_wrapper">
-          <div styleName="portraits_wrapper">
-            <SummonerPortrait
-              summonerLevel={singleSummoner.summonerLevel}
-              profileIconId={singleSummoner.profileIconId}
-            />
-            <MostPlayedChampions
-              data={data}
-              mostPlayed={summonerStats.mostPlayed[routerId]}
-            />
+        <div>
+          <div styleName="top_profile_wrapper">
+            <div styleName="portraits_wrapper">
+              <SummonerPortrait
+                summonerLevel={singleSummoner.summonerLevel}
+                profileIconId={singleSummoner.profileIconId}
+              />
+              <MostPlayedChampions
+                data={data}
+                mostPlayed={summonerStats.mostPlayed[routerId]}
+              />
+            </div>
+            {statsPortraits}
+            <div styleName="summoner_name">{singleSummoner.name}
+              <Nav routerId={routerId} />
+            </div>
+
           </div>
-          {statsPortraits}
-          <div styleName="summoner_name">{singleSummoner.name}</div>
         </div>
-        <Nav routerId={routerId} />
         {this.props.children && React.cloneElement(this.props.children, this.props)}
       </div>
     );

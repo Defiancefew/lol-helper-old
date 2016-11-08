@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
 const Nav = ({ routerId }) => {
-  return (<div>
+  return (<div style={{ display: 'inline-block'}}>
     <ul>
       <li className="nav_list">
         <Link className="nav" activeClassName="nav_active" to={`summoner/${routerId}/match`}>Match</Link>

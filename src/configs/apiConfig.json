@@ -82,8 +82,8 @@
   },
   "apiTypes": {
     "champions": {
-      "url": "v1.2/champion/",
-      "freeToPlay": "&freeToPlay=true"
+      "url": "v1.2/champion",
+      "freeToPlay": "?freeToPlay=true"
     },
     "championMastery": {
       "url": "championmastery/location/",

@@ -79,7 +79,7 @@ class LolApi {
 
     if (validateNumbers(params) && validParams) {
       const finalUrl = (!isEmpty(validParams) && isArray(validParams))
-        ? `${basicUrl}${validParams[0]}${apiKeyQuery}${validParams[1]}`
+        ? `${basicUrl}${validParams[0]}${validParams[1]}&api_key=${this.apiKey}`
         : `${basicUrl}${validParams}${apiKeyQuery}`;
 
       if (testLog) {
@@ -109,10 +109,10 @@ class LolApi {
         return baseQuery;
       }
 
-      return `${baseQuery}${championId}`;
+      return `${baseQuery}/${championId}`;
     }
 
-    return [`${baseQuery}${championId}`, champions.freeToPlay];
+    return [baseQuery, champions.freeToPlay];
   }
   /*
    Get champion mastery info
@@ -293,9 +293,9 @@ class LolApi {
 }
 
 exports.lolApi = LolApi;
-//
-// const l = new LolApi(apiKey);
-// l.createQuery('recentGames', { region: 'EUW', summonerId: 23842771 })
+
+const l = new LolApi(apiKey);
+// l.createQuery('champions', { region: 'EUW', freeToPlay: true }, true)
 // .then(r => console.log(r))
 // .catch(err => console.log(err));
 

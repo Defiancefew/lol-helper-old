@@ -32,6 +32,9 @@ const MatchNode = ({ data, matchInfo }) => {
     return <SearchIcon key={number} nodeInfo={itemData} />;
   });
 
+  const created = new Date(matchInfo.createDate).toDateString();
+  const timePlayed = new Date(matchInfo.stats.timePlayed * 1000).toISOString().substr(11, 8);
+
   return (
     <div styleName="match_node_wrapper">
       <div styleName="champion_icons_wrapper">
@@ -40,10 +43,14 @@ const MatchNode = ({ data, matchInfo }) => {
         {summoners}
       </div>
       <div styleName="stats_wrapper">
-        <div styleName={'location_wrapper'}>
+        <div styleName='location_wrapper'>
           <div>({gameType})</div>
           <div>{mapName}</div>
           <div>{_.capitalize(matchInfo.gameMode)} </div>
+        </div>
+        <div styleName='location_wrapper'>
+          <div>{created} </div>
+          <div>{timePlayed}</div>
         </div>
         <span
           styleName="stats_win"
@@ -51,6 +58,7 @@ const MatchNode = ({ data, matchInfo }) => {
         >
           {stats.win ? 'Victory' : 'Defeat'}
         </span>
+
         <span styleName="stats_kills">{stats.championsKilled} | {stats.numDeaths} | {stats.assists}</span>
       </div>
       {listOfItems}
