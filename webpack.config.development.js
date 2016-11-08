@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 export default validate(merge(baseConfig, {
   target: 'electron-renderer',
   debug: true,
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'source-map',
   entry: [
     `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
     'babel-polyfill',

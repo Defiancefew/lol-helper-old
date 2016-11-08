@@ -25,17 +25,9 @@ const SEARCH_SUMMONER_START = 'app/search/SEARCH_SUMMONER_START';
 const SEARCH_SUMMONER_ERROR = 'app/search/SEARCH_SUMMONER_ERROR';
 const SEARCH_SUMMONER_SUCCESS = 'app/search/SEARCH_SUMMONER_SUCCESS';
 
-const SEARCH_TEAM_START = 'app/search/SEARCH_TEAM_START';
-const SEARCH_TEAM_ERROR = 'app/search/SEARCH_TEAM_ERROR';
-const SEARCH_TEAM_SUCCESS = 'app/search/SEARCH_TEAM_SUCCESS';
-
 const SEARCH_SUMMONER_DATA_SUCCESS = 'app/search/SEARCH_SUMMONER_DATA_SUCCESS';
 const SEARCH_SUMMONER_DATA_START = 'app/search/SEARCH_SUMMONER_DATA_START';
 const SEARCH_SUMMONER_DATA_ERROR = 'app/search/SEARCH_SUMMONER_DATA_ERROR';
-
-const SEARCH_SUMMONER_RECENT_START = 'app/search/SEARCH_SUMMONER_RECENT_START';
-const SEARCH_SUMMONER_RECENT_SUCCESS = 'app/search/SEARCH_SUMMONER_RECENT_SUCCESS';
-const SEARCH_SUMMONER_RECENT_ERROR = 'app/search/SEARCH_SUMMONER_RECENT_ERROR';
 
 export const changeFilter = filter => ({ type: CHANGE_FILTER_VALUE, payload: filter });
 
@@ -93,6 +85,7 @@ export const getSummoner = name =>
   (dispatch, getState) => {
     dispatch({ type: SEARCH_SUMMONER_START });
     const region = getState().search.selectedRegion.short;
+    console.log(name);
 
     lolApi.createQuery('summoner', { name, region })
       .then((summonerResult) => {
@@ -108,106 +101,8 @@ export const getSummoner = name =>
       .catch(err => dispatch({ type: SEARCH_SUMMONER_ERROR, payload: err }));
   };
 
-export const fetchSummonerRunes = () =>
-  (dispatch, getState) => {
-    const state = getState().search;
-    const region = state.selectedRegion.short;
-    const summonerId = state.search.summonerId;
-
-    dispatch({ type: SEARCH_SUMMONER_DATA_START });
-
-    return lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
-      .then(result => dispatch({
-        type: SEARCH_SUMMONER_DATA_SUCCESS,
-        payload: { runes: result }
-      }))
-      .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
-  };
-
-export const fetchSummonerMasteries = () =>
-  (dispatch, getState) => {
-    const state = getState().search;
-    const region = state.selectedRegion.short;
-    const summonerId = state.search.summonerId;
-
-    dispatch({ type: SEARCH_SUMMONER_DATA_START });
-
-    return lolApi.createQuery('summoner', { region, type: 'masteries', summonerId })
-      .then(result => dispatch({
-        type: SEARCH_SUMMONER_DATA_SUCCESS,
-        payload: { masteries: result }
-      }))
-      .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
-  };
-
-// export const getSummonerStats = () =>
-//   (dispatch, getState) => {
-//     const state = getState().search;
-//     const region = state.selectedRegion.short;
-//     const summonerId = state.search.summonerId;
-//
-//     dispatch({ type: SEARCH_SUMMONER_DATA_START });
-//
-//     return Promise.all([
-//       lolApi.createQuery('summoner', { region, type: 'masteries', summonerId }),
-//       lolApi.createQuery('summoner', { region, type: 'runes', summonerId })
-//     ])
-//       .then(result => dispatch({
-//         type: SEARCH_SUMMONER_DATA_SUCCESS,
-//         payload: {
-//           masteries: result[0],
-//           runes: result[1]
-//         }
-//       }))
-//       .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
-//   };
-
-export const getTeam = name =>
-  (dispatch, getState) => {
-    dispatch({ type: SEARCH_TEAM_START });
-    const region = getState().search.selectedRegion.short;
-
-    lolApi.createQuery('summoner', { name, region })
-      .then((listOfSummoners) => {
-        const summonerIds = _.map('id', listOfSummoners);
-        return lolApi.createQuery('team', { id: summonerIds, region, type: 'summoner' });
-      })
-      .then(result => dispatch({ type: SEARCH_TEAM_SUCCESS, payload: result }))
-      .catch(err => dispatch({ type: SEARCH_TEAM_ERROR, payload: err }));
-  };
-
 export const selectRegion = region =>
   ({ type: SEARCH_REGION_CHANGED, payload: region });
-
-export const searchChampions = summonerId =>
-  (dispatch, getState) => {
-    const platformId = getState().search.selectedRegion.platformId;
-    dispatch({ type: SEARCH_SUMMONER_DATA_START });
-
-    lolApi.createQuery('championMastery', { platformId, type: 'topchampions', summonerId })
-      .then((result) => {
-        dispatch({
-          type: SEARCH_SUMMONER_DATA_SUCCESS,
-          payload: { mostPlayed: { [summonerId]: result } }
-        });
-      })
-      .catch(err => dispatch({ type: SEARCH_SUMMONER_DATA_ERROR, payload: err }));
-  };
-
-export const searchRecentGames = id =>
-  (dispatch, getState) => {
-    const region = getState().search.selectedRegion.short;
-    dispatch({ type: SEARCH_SUMMONER_RECENT_START });
-    const summonerId = parseInt(id, 10);
-
-    lolApi.createQuery('recentGames', { region, summonerId })
-      .then((result) => {
-        dispatch({ type: SEARCH_SUMMONER_RECENT_SUCCESS, payload: result });
-      })
-      .catch(err => dispatch({ type: SEARCH_SUMMONER_RECENT_ERROR, payload: err }));
-  };
-
-// export const searchSummonerRunes = id =>
 
 const initialState = {
   filters: {
@@ -223,15 +118,8 @@ const initialState = {
   regions,
   selectedRegion: regions.EUW,
   summonerResult: {},
-  teamResult: {},
-  summonerStats: {
-    leagueEntries: {},
-    mostPlayed: {},
-    runes: {},
-    masteries: {}
-  },
-  summonerRecent: {},
-  summonerId: []
+  summonerId: [],
+  leagueEntries: {}
 };
 
 // TODO Add error cases for team and summoner
@@ -283,24 +171,11 @@ export default function (state = initialState, action) {
         summonerResult: action.payload.summonerResult,
         summonerId: action.payload.summonerId
       };
-    case SEARCH_TEAM_SUCCESS:
-      return {
-        ...state,
-        teamResult: action.payload
-      };
     case SEARCH_SUMMONER_DATA_SUCCESS:
       return {
         ...state,
-        summonerStats: {
-          ...state.summonerStats,
-          ...action.payload
-        }
-      };
-    case SEARCH_SUMMONER_RECENT_SUCCESS:
-      return {
-        ...state,
-        summonerRecent: { ...state.summonerRecent, [action.payload.summonerId]: action.payload }
-      };
+        ...action.payload
+      }
     default:
       return state;
   }

@@ -1,5 +1,4 @@
-import React, { Component, PropTypes } from 'react';
-import { debounce } from 'lodash';
+import React, { PureComponent, PropTypes } from 'react';
 import cssModules from 'react-css-modules';
 import SearchFilter from './Filter/SearchFilter';
 import SearchAutoSuggest from './AutoSuggest/SearchAutoSuggest';
@@ -7,25 +6,28 @@ import Regions from './Regions/SearchRegions';
 import styles from './SearchInput.scss';
 import { Cancel } from '../../Icons';
 
-class SearchInput extends Component {
-  debouncedSearch = debounce(searchValue => this.props.searchOfflineData(searchValue), 1000)
+class SearchInput extends PureComponent {
+  debouncedSearch = _.debounce(searchValue => this.props.searchOfflineData(searchValue), 1000)
+  throttledStart = _.throttle(() => this.props.searchStart(), 2000)
 
   static propTypes = {
-    searching: PropTypes.bool.isRequired,
-    value: PropTypes.string.isRequired,
+    search: PropTypes.shape({
+      searching: PropTypes.bool.isRequired,
+      value: PropTypes.string.isRequired,
+      regions: PropTypes.shape({}),
+      filters: PropTypes.shape({}),
+      selectedRegion: PropTypes.shape({}),
+    }),
     selectRegion: PropTypes.func.isRequired,
     changeFilter: PropTypes.func.isRequired,
     getSummoner: PropTypes.func.isRequired,
     searchOfflineData: PropTypes.func.isRequired,
     searchStart: PropTypes.func,
     cleanSuggestions: PropTypes.func,
-    selectedRegion: PropTypes.shape({}),
-    regions: PropTypes.shape({}),
-    filters: PropTypes.shape({})
   }
 
   onChange = (e) => {
-    this.props.searchStart();
+    this.throttledStart();
     e.persist();
     this.debouncedSearch(e.target.value);
   }
@@ -41,13 +43,15 @@ class SearchInput extends Component {
   }
 
   render() {
+    const { selectedRegion, regions, value, filters, suggestions, searching } = this.props.search;
+
     return (
       <div>
         <div styleName="wrapper">
           <Regions
             selectRegion={this.props.selectRegion}
-            regions={this.props.regions}
-            selectedRegion={this.props.selectedRegion}
+            regions={regions}
+            selectedRegion={selectedRegion}
           />
           <span styleName="inputWrapper">
             <input
@@ -63,18 +67,24 @@ class SearchInput extends Component {
               <Cancel style={{ fill: 'white' }} width="12px" height="12px" />
             </button>
           </span>
-          <button styleName="search" onClick={() => this.props.getSummoner(this.props.value)}>
+          <button
+            styleName="search"
+            onClick={() => {
+              this.props.getSummoner(this.search.value);
+              this.props.getLeagueEntries(this.search.value);
+            }}
+          >
             Search
           </button>
-          <SearchFilter filters={this.props.filters} changeFilter={this.props.changeFilter} />
+          <SearchFilter filters={filters} changeFilter={this.props.changeFilter} />
         </div>
         <div>
           <SearchAutoSuggest
             chooseValue={this.chooseValue}
-            suggestions={this.props.suggestions}
-            value={this.props.value}
+            suggestions={suggestions}
+            value={value}
             getSummoner={this.props.getSummoner}
-            searching={this.props.searching}
+            searching={searching}
           />
         </div>
       </div>

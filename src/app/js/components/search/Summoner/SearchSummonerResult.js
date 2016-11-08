@@ -5,7 +5,7 @@ import SearchIcon from '../../searchicon/searchIcon';
 import styles from './SearchSummonerResult.scss';
 
 const SummonerResult = (props) => {
-  const { summonerResult, data, summonerStats } = props;
+  const { summonerResult, data, leagueEntries } = props;
 
   if (summonerResult.status) {
     return (<div>{summonerResult.status.status_code} {summonerResult.status.message}</div>)
@@ -13,23 +13,16 @@ const SummonerResult = (props) => {
 
   const listOfSummoners = _.map(summonerResult, (summoner) => {
     const nodeInfo = props.data.profileicon[summoner.profileIconId];
-    // const image = props.data.profileicon[summoner.profileIconId].image;
-    // const computedStyle = {
-    //   backgroundImage: `url(./img/sprites/${image.group}/${image.sprite})`,
-    //   backgroundPosition: `${-image.x}px ${-image.y}px`,
-    //   width: image.w,
-    //   height: image.h
-    // };
 
     const renderStats = () => {
-      if (!_.isEmpty(summonerStats) && summonerStats.leagueEntries[summoner.id]) {
+      if (!_.isEmpty(leagueEntries) && leagueEntries[summoner.id]) {
         const {
           division,
           leaguePoints,
           wins,
           losses
-        } = summonerStats.leagueEntries[summoner.id][0].entries[0];
-        const { name, tier, queue } = summonerStats.leagueEntries[summoner.id][0];
+        } = leagueEntries[summoner.id][0].entries[0];
+        const { name, tier, queue } = leagueEntries[summoner.id][0];
 
         const statsComputedStyle = {
           backgroundImage: `url(./img/tier/base/${tier.toLowerCase()}.png`,
@@ -53,10 +46,10 @@ const SummonerResult = (props) => {
     return (
       <Link style={{ textDecoration: 'none' }} key={summoner.id} to={`summoner/${summoner.id}`}>
         <div styleName="container">
-          <span style={{ verticalAlign: 'top', display: 'inline-block', margin: '0 20px' }}>
+          <span style={{ verticalAlign: 'middle', display: 'inline-block', margin: '0 20px' }}>
             <SearchIcon nodeInfo={nodeInfo} />
           </span>
-          {summoner.summonerLevel} {summoner.name} {renderStats()}
+          <span style={{verticalAlign: 'middle'}}>{summoner.summonerLevel} {summoner.name} {renderStats()}</span>
         </div>
       </Link>
     );
